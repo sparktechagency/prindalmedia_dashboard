@@ -81,7 +81,7 @@ const DashboardOtp = () => {
                         }}
                     />
                 </div>
-                {/* forget password **/}
+                {/* forget password */}
                 <div className=" justify-center items-center  flex    ">
                     <div className="h-[60vh] bg-white w-[536px]  shadow-xl p-8 rounded-2xl">
                         <div className="text-center pb-16">
