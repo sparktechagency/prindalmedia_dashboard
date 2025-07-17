@@ -1,13 +1,36 @@
 
 
 import { Button, Checkbox, Divider, Form, Input } from "antd"
-import { FaEye, FaEyeSlash } from "react-icons/fa"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import img2 from "/login/photo2.png"
+import { useForgotApiMutation } from "../../../redux/dashboardFeatures/authontication/authApi"
+import toast from "react-hot-toast"
+
+
 
 const DashboardForgetPassword = () => {
+    const navigate = useNavigate()
+    const [form] = Form.useForm()
+    const [forgotApi] = useForgotApiMutation()
 
-    const onFinish = () => {
+
+
+    const onFinish = async (values) => {
+        const formData = new FormData();
+        formData.append("email", values?.email);
+        try {
+            const res = await forgotApi(formData).unwrap()
+
+            if (res.status === true) {
+                toast.success(res?.message)
+                form.resetFields()
+                navigate(`/otp-code?email=${values?.email}`)
+            }
+        } catch (error) {
+            if (error) {
+                toast.error(error?.data?.message)
+            }
+        }
 
     }
     return (
@@ -39,7 +62,7 @@ const DashboardForgetPassword = () => {
                         </div>
 
 
-                        <Form layout="vertical" onFinish={onFinish} className="">
+                        <Form form={form} layout="vertical" onFinish={onFinish} className="">
                             <div>
                                 <p className="text-[24px] font-OpenSans">Email</p>
                                 <Form.Item
@@ -53,27 +76,24 @@ const DashboardForgetPassword = () => {
                                     />
                                 </Form.Item>
                             </div>
-                            <Link to="/otp-code">
-                                <Button
-                                    htmlType="submit"
-                                    block
-                                    style={{
-                                        backgroundColor: "#00C49A",
-                                        color: "#ffffff",
-                                        fontSize: "20px",
-                                        fontWeight: "600",
-                                        height: "60px",
-                                        borderRadius: "20px",
-                                        paddingInline: "20px",
-                                        marginTop: "20px",
-                                        border: "none",
+                            <Button
+                                htmlType="submit"
+                                block
+                                style={{
+                                    backgroundColor: "#00C49A",
+                                    color: "#ffffff",
+                                    fontSize: "20px",
+                                    fontWeight: "600",
+                                    height: "60px",
+                                    borderRadius: "20px",
+                                    paddingInline: "20px",
+                                    marginTop: "20px",
+                                    border: "none",
 
-                                    }}
-                                >
-                                    Submit
-                                </Button>
-                            </Link>
-
+                                }}
+                            >
+                                Submit
+                            </Button>
                         </Form>
 
                     </div>

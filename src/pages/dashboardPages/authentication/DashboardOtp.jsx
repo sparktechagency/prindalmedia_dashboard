@@ -1,20 +1,69 @@
 
 import { Button, Checkbox, Divider, Form, Input } from "antd"
 import { FaEye, FaEyeSlash } from "react-icons/fa"
-import { Link } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import img3 from "/login/photo3.png"
+import { useResendApiMutation, useVerifyOtpApiMutation } from "../../../redux/dashboardFeatures/authontication/authApi"
+import { useState } from "react"
+import toast from "react-hot-toast"
 
 const DashboardOtp = () => {
+    const navigate = useNavigate()
+    const [form] = Form.useForm()
+    const [otpCode, setOtpCode] = useState("");
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const queryEmail = queryParams.get('email');
 
 
+    const [verifyOtpApi] = useVerifyOtpApiMutation()
+    const [resendApi] = useResendApiMutation()
 
 
-    const onChange = (text) => {
-        console.log("onChange:", text);
-    };
+    const onFinish = async (values) => {
+        const formData = new FormData();
+        formData.append("otp", values?.otp);
 
-    const onFinish = () => {
+        try {
+            const res = await verifyOtpApi(formData).unwrap();
+            const token = res?.access_token
+            const role = res?.data?.user?.role
 
+            if (res?.status === true) {
+                localStorage.setItem("token", token);
+                toast.success(res?.message);
+                navigate(`/create-new-password?email=${queryEmail}`)
+                form.resetFields()
+            } else {
+                toast.error(res?.message);
+                form.resetFields()
+            }
+        } catch (error) {
+            if (error) {
+                toast.error(error?.data?.message)
+                form.resetFields()
+            }
+        }
+
+    }
+
+
+    const handleResentOtp = async () => {
+        const formData = new FormData();
+        formData.append("email", queryEmail);
+
+
+        try {
+            const res = await resendApi(formData).unwrap();
+            console.log(res?.message)
+            if (res?.status === true) {
+                toast.success(res?.message);
+            } else {
+                toast.error(res?.message);
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -46,37 +95,36 @@ const DashboardOtp = () => {
                         </div>
 
 
-                        <Form layout="vertical" onFinish={onFinish} className="">
-                            <Input.OTP
-                                size="large"
-                                className="otp-input"
-                                style={{ width: "100%", height: "40px" }}
-                                length={6}
-                                formatter={(str) => str.toUpperCase()}
-                                onChange={onChange}
-                            />
-                            <Link to="/create-new-password">
-                                <Button
-                                    htmlType="submit"
-                                    block
-                                    style={{
-                                        backgroundColor: "#00C49A",
-                                        color: "#ffffff",
-                                        fontSize: "20px",
-                                        fontWeight: "600",
-                                        height: "60px",
-                                        borderRadius: "20px",
-                                        paddingInline: "20px",
-                                        marginTop: "20px",
-                                        border: "none",
+                        <Form form={form} layout="vertical" onFinish={onFinish} className="flex flex-col justify-center items-center">
+                            <Form.Item name="otp" rules={[{ required: true, message: "Please enter the otp code" }]}>
+                                <Input.OTP />
+                            </Form.Item>
+                            <Button
+                                htmlType="submit"
+                                block
+                                style={{
+                                    backgroundColor: "#00C49A",
+                                    color: "#ffffff",
+                                    fontSize: "20px",
+                                    fontWeight: "600",
+                                    height: "60px",
+                                    borderRadius: "20px",
+                                    paddingInline: "20px",
+                                    marginTop: "20px",
+                                    border: "none",
 
-                                    }}
-                                >
-                                   Verify
-                                </Button>
-                            </Link>
-
+                                }}
+                            >
+                                Verify
+                            </Button>
                         </Form>
+
+                        <p className="text-center mt-10 text-sm font-normal mb-6 text-[#5C5C5C]">
+                            I have not received the email.
+                            <Button onClick={() => handleResentOtp()} className="pl-1 text-primary " type="link">
+                                Resend
+                            </Button>
+                        </p>
 
                     </div>
                 </div>

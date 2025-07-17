@@ -1,14 +1,53 @@
 
 import { Button, Checkbox, Divider, Form, Input } from "antd"
 import { FaEye, FaEyeSlash } from "react-icons/fa"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import img1 from "/login/photo1.png"
+import { useLoginApiMutation } from "../../../redux/dashboardFeatures/authontication/authApi"
+import toast from "react-hot-toast"
+
 
 const DashboardLogin = () => {
+    const navigate = useNavigate()
+    const [form] = Form.useForm()
+    const [loginApi] = useLoginApiMutation()
 
-    const onFinish = () => {
+    const onFinish = async (values) => {
+        const authInfo = {
+            email: values?.email,
+            password: values?.password
+        }
+
+
+        try {
+            const res = await loginApi(authInfo).unwrap()
+            const token = res.token;
+            const role = res?.user?.role
+
+
+            if (res.status === true) {
+                toast.success(res?.message)
+                localStorage.setItem("token", token);
+                localStorage.setItem("role", role);
+                form.resetFields()
+                navigate('/')
+            }
+            else if (res.status === false) {
+                toast.error(res?.message)
+            } else {
+                toast.error(res?.message)
+            }
+        } catch (error) {
+            if(error){
+                 toast.error(error?.data?.message)
+            }
+        }
+
+
 
     }
+
+
     return (
         <>
             <div className="h-dvh font-OpenSans grid grid-cols-2 border border-gray-700  ">
@@ -38,7 +77,7 @@ const DashboardLogin = () => {
                         </div>
 
 
-                        <Form layout="vertical" onFinish={onFinish} className="">
+                        <Form form={form} layout="vertical" onFinish={onFinish} className="">
                             <div>
                                 <p className="text-[24px] font-OpenSans">Email</p>
                                 <Form.Item
@@ -46,7 +85,7 @@ const DashboardLogin = () => {
                                     rules={[{ required: true, message: "Please enter your email" }]}
                                 >
                                     <Input
-                                        placeholder="abidhasan@gmail.com"
+                                        placeholder="example@gmail.com"
                                         style={{ height: "50px", backgroundColor: "#fefefe" }}
                                         className="bg-[#fefefe]"
                                     />
@@ -81,29 +120,25 @@ const DashboardLogin = () => {
                                     </Link>
                                 </div>
                             </Form.Item>
-                            <Link to='/'>
-                                <Button
-                                    htmlType="submit"
-                                    block
-                                    style={{
-                                        backgroundColor: "#00C49A",
-                                        color: "#ffffff",
-                                        fontSize: "20px",
-                                        fontWeight: "600",
-                                        height: "60px",
-                                        borderRadius: "20px",
-                                        paddingInline: "20px",
-                                        marginTop: "20px",
-                                        border: "none",
+                            <Button
+                                htmlType="submit"
+                                block
+                                style={{
+                                    backgroundColor: "#00C49A",
+                                    color: "#ffffff",
+                                    fontSize: "20px",
+                                    fontWeight: "600",
+                                    height: "60px",
+                                    borderRadius: "20px",
+                                    paddingInline: "20px",
+                                    marginTop: "20px",
+                                    border: "none",
 
-                                    }}
-                                >
-                                    Sign In
-                                </Button>
-                            </Link>
-
+                                }}
+                            >
+                                Sign In
+                            </Button>
                         </Form>
-
                     </div>
                 </div>
             </div>
