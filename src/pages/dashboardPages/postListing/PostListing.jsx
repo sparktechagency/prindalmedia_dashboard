@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input, Space, Table, Form, Radio } from 'antd';
 import { AudioOutlined } from '@ant-design/icons';
 const { Search } = Input;
@@ -9,11 +9,10 @@ import { Button, Modal } from 'antd';
 
 const PostListing = () => {
     const [formOne] = Form.useForm();
-    const [selectionType, setSelectionType] = useState('checkbox');
-    const [searchText, setSearchText] = useState('')
     const [modalOpenOne, setModalOpenOne] = useState(false)
-    const [value, setValue] = useState(1);
-
+    const [searchText, setSearchText] = useState('')
+    const [currentPage, setCurrentPage] = useState(1);
+    const [perPage, setPerPage] = useState(8);
 
 
     // modal one
@@ -48,8 +47,6 @@ const PostListing = () => {
             }}
         />
     );
-    const onSearch = (value, _e, info) =>
-        console.log(info === null || info === void 0 ? void 0 : info.source, value);
 
     const handleDelete = () => {
         console.log('click')
@@ -99,8 +96,8 @@ const PostListing = () => {
             title: 'Order Type',
             dataIndex: 'order_type',
         },
-      
-       
+
+
         {
             title: <div className="text-right">Action</div>,
             dataIndex: "action",
@@ -128,98 +125,500 @@ const PostListing = () => {
     ];
 
 
-    const data = [
-        {
-            key: '1',
-            name: 'John Brown',
-           order_type:"Home-Made",
-            location:"Dhaka",
-            food_type:"Meal",
-            action: '1',
-            avatar: 'https://randomuser.me/api/portraits/men/1.jpg'
-        },
-        {
-            key: '2',
-            name: 'Emma Smith',
-           order_type:"Restaurant",
-            location:"Shylet",
-            food_type:"Drink",
-            action: '2',
-            avatar: 'https://randomuser.me/api/portraits/women/2.jpg'
-        },
-        {
-            key: '3',
-            name: 'Liam Johnson',
-           order_type:"Restaurant",
-            location:"Khulna",
-            food_type:"Drink",
-            action: '3',
-            avatar: 'https://randomuser.me/api/portraits/men/3.jpg'
-        },
-        {
-            key: '4',
-            name: 'Olivia Brown',
-           order_type:"Home-Made",
-            location:"Shylet",
-            food_type:"Meal",
-            action: '4',
-            avatar: 'https://randomuser.me/api/portraits/women/4.jpg'
-        },
-        {
-            key: '5',
-            name: 'Noah Williams',
-           order_type:"Restaurant",
-            location:"Dhaka",
-            food_type:"Drink",
-            action: '5',
-            avatar: 'https://randomuser.me/api/portraits/men/5.jpg'
-        },
-        {
-            key: '6',
-            name: 'Ava Jones',
-           order_type:"Home-Made",
-            location:"Dhaka",
-            food_type:"Meal",
-            action: '6',
-            avatar: 'https://randomuser.me/api/portraits/women/6.jpg'
-        },
-        {
-            key: '7',
-            name: 'William Garcia',
-           order_type:"Restaurant",
-            location:"Dhaka",
-            food_type:"Meal",
-            action: '7',
-            avatar: 'https://randomuser.me/api/portraits/men/7.jpg'
-        },
-        {
-            key: '8',
-            name: 'Sophia Miller',
-           order_type:"Home-Made",
-            location:"Dhaka",
-            food_type:"Meal",
-            action: '8',
-            avatar: 'https://randomuser.me/api/portraits/women/8.jpg'
-        },
-    ];
+  const allPostListe = [
+  {
+    "key": "1",
+    "name": "John Brown",
+    "order_type": "Restaurant",
+    "location": "Sylhet",
+    "food_type": "Meal",
+    "action": "1",
+    "image": "https://randomuser.me/api/portraits/men/1.jpg"
+  },
+  {
+    "key": "2",
+    "name": "Emily White",
+    "order_type": "Home-Made",
+    "location": "Barisal",
+    "food_type": "Snack",
+    "action": "2",
+    "avatar": "https://randomuser.me/api/portraits/women/2.jpg"
+  },
+  {
+    "key": "3",
+    "name": "Michael Green",
+    "order_type": "Home-Made",
+    "location": "Barisal",
+    "food_type": "Dessert",
+    "action": "3",
+    "avatar": "https://randomuser.me/api/portraits/men/3.jpg"
+  },
+  {
+    "key": "4",
+    "name": "Sarah Johnson",
+    "order_type": "Home-Made",
+    "location": "Chittagong",
+    "food_type": "Drink",
+    "action": "4",
+    "avatar": "https://randomuser.me/api/portraits/women/4.jpg"
+  },
+  {
+    "key": "5",
+    "name": "David Lee",
+    "order_type": "Restaurant",
+    "location": "Barisal",
+    "food_type": "Dessert",
+    "action": "5",
+    "avatar": "https://randomuser.me/api/portraits/men/5.jpg"
+  },
+  {
+    "key": "6",
+    "name": "Olivia Taylor",
+    "order_type": "Restaurant",
+    "location": "Khulna",
+    "food_type": "Snack",
+    "action": "6",
+    "avatar": "https://randomuser.me/api/portraits/women/6.jpg"
+  },
+  {
+    "key": "7",
+    "name": "Chris Evans",
+    "order_type": "Restaurant",
+    "location": "Dhaka",
+    "food_type": "Snack",
+    "action": "7",
+    "avatar": "https://randomuser.me/api/portraits/men/7.jpg"
+  },
+  {
+    "key": "8",
+    "name": "Sophia Martinez",
+    "order_type": "Restaurant",
+    "location": "Khulna",
+    "food_type": "Snack",
+    "action": "8",
+    "avatar": "https://randomuser.me/api/portraits/women/8.jpg"
+  },
+  {
+    "key": "9",
+    "name": "Daniel Wilson",
+    "order_type": "Home-Made",
+    "location": "Rajshahi",
+    "food_type": "Dessert",
+    "action": "9",
+    "avatar": "https://randomuser.me/api/portraits/men/9.jpg"
+  },
+  {
+    "key": "10",
+    "name": "Ava Robinson",
+    "order_type": "Restaurant",
+    "location": "Rajshahi",
+    "food_type": "Snack",
+    "action": "10",
+    "avatar": "https://randomuser.me/api/portraits/women/10.jpg"
+  },
+  {
+    "key": "11",
+    "name": "Liam Thomas",
+    "order_type": "Restaurant",
+    "location": "Khulna",
+    "food_type": "Drink",
+    "action": "11",
+    "avatar": "https://randomuser.me/api/portraits/men/11.jpg"
+  },
+  {
+    "key": "12",
+    "name": "Mia Hall",
+    "order_type": "Restaurant",
+    "location": "Dhaka",
+    "food_type": "Snack",
+    "action": "12",
+    "avatar": "https://randomuser.me/api/portraits/women/12.jpg"
+  },
+  {
+    "key": "13",
+    "name": "Noah Allen",
+    "order_type": "Home-Made",
+    "location": "Barisal",
+    "food_type": "Snack",
+    "action": "13",
+    "avatar": "https://randomuser.me/api/portraits/men/13.jpg"
+  },
+  {
+    "key": "14",
+    "name": "Isabella Young",
+    "order_type": "Restaurant",
+    "location": "Khulna",
+    "food_type": "Meal",
+    "action": "14",
+    "avatar": "https://randomuser.me/api/portraits/women/14.jpg"
+  },
+  {
+    "key": "15",
+    "name": "Ethan Hernandez",
+    "order_type": "Home-Made",
+    "location": "Sylhet",
+    "food_type": "Meal",
+    "action": "15",
+    "avatar": "https://randomuser.me/api/portraits/men/15.jpg"
+  },
+  {
+    "key": "16",
+    "name": "Amelia King",
+    "order_type": "Home-Made",
+    "location": "Barisal",
+    "food_type": "Meal",
+    "action": "16",
+    "avatar": "https://randomuser.me/api/portraits/women/16.jpg"
+  },
+  {
+    "key": "17",
+    "name": "James Wright",
+    "order_type": "Restaurant",
+    "location": "Chittagong",
+    "food_type": "Dessert",
+    "action": "17",
+    "avatar": "https://randomuser.me/api/portraits/men/17.jpg"
+  },
+  {
+    "key": "18",
+    "name": "Charlotte Lopez",
+    "order_type": "Restaurant",
+    "location": "Chittagong",
+    "food_type": "Snack",
+    "action": "18",
+    "avatar": "https://randomuser.me/api/portraits/women/18.jpg"
+  },
+  {
+    "key": "19",
+    "name": "Benjamin Hill",
+    "order_type": "Home-Made",
+    "location": "Chittagong",
+    "food_type": "Dessert",
+    "action": "19",
+    "avatar": "https://randomuser.me/api/portraits/men/19.jpg"
+  },
+  {
+    "key": "20",
+    "name": "Abigail Scott",
+    "order_type": "Home-Made",
+    "location": "Dhaka",
+    "food_type": "Snack",
+    "action": "20",
+    "avatar": "https://randomuser.me/api/portraits/women/20.jpg"
+  },
+  {
+    "key": "21",
+    "name": "Lucas Green",
+    "order_type": "Home-Made",
+    "location": "Dhaka",
+    "food_type": "Snack",
+    "action": "21",
+    "avatar": "https://randomuser.me/api/portraits/men/21.jpg"
+  },
+  {
+    "key": "22",
+    "name": "Emily Baker",
+    "order_type": "Home-Made",
+    "location": "Sylhet",
+    "food_type": "Meal",
+    "action": "22",
+    "avatar": "https://randomuser.me/api/portraits/women/22.jpg"
+  },
+  {
+    "key": "23",
+    "name": "Logan Adams",
+    "order_type": "Restaurant",
+    "location": "Khulna",
+    "food_type": "Snack",
+    "action": "23",
+    "avatar": "https://randomuser.me/api/portraits/men/23.jpg"
+  },
+  {
+    "key": "24",
+    "name": "Ella Nelson",
+    "order_type": "Restaurant",
+    "location": "Khulna",
+    "food_type": "Dessert",
+    "action": "24",
+    "avatar": "https://randomuser.me/api/portraits/women/24.jpg"
+  },
+  {
+    "key": "25",
+    "name": "Jacob Carter",
+    "order_type": "Home-Made",
+    "location": "Sylhet",
+    "food_type": "Meal",
+    "action": "25",
+    "avatar": "https://randomuser.me/api/portraits/men/25.jpg"
+  },
+  {
+    "key": "26",
+    "name": "Grace Mitchell",
+    "order_type": "Home-Made",
+    "location": "Rajshahi",
+    "food_type": "Dessert",
+    "action": "26",
+    "avatar": "https://randomuser.me/api/portraits/women/26.jpg"
+  },
+  {
+    "key": "27",
+    "name": "Alexander Perez",
+    "order_type": "Home-Made",
+    "location": "Sylhet",
+    "food_type": "Snack",
+    "action": "27",
+    "avatar": "https://randomuser.me/api/portraits/men/27.jpg"
+  },
+  {
+    "key": "28",
+    "name": "Chloe Roberts",
+    "order_type": "Home-Made",
+    "location": "Khulna",
+    "food_type": "Dessert",
+    "action": "28",
+    "avatar": "https://randomuser.me/api/portraits/women/28.jpg"
+  },
+  {
+    "key": "29",
+    "name": "Henry Turner",
+    "order_type": "Restaurant",
+    "location": "Rajshahi",
+    "food_type": "Dessert",
+    "action": "29",
+    "avatar": "https://randomuser.me/api/portraits/men/29.jpg"
+  },
+  {
+    "key": "30",
+    "name": "Lily Phillips",
+    "order_type": "Restaurant",
+    "location": "Chittagong",
+    "food_type": "Drink",
+    "action": "30",
+    "avatar": "https://randomuser.me/api/portraits/women/30.jpg"
+  },
+  {
+    "key": "31",
+    "name": "Sebastian Campbell",
+    "order_type": "Home-Made",
+    "location": "Barisal",
+    "food_type": "Meal",
+    "action": "31",
+    "avatar": "https://randomuser.me/api/portraits/men/31.jpg"
+  },
+  {
+    "key": "32",
+    "name": "Sofia Parker",
+    "order_type": "Home-Made",
+    "location": "Sylhet",
+    "food_type": "Meal",
+    "action": "32",
+    "avatar": "https://randomuser.me/api/portraits/women/32.jpg"
+  },
+  {
+    "key": "33",
+    "name": "Aiden Evans",
+    "order_type": "Restaurant",
+    "location": "Barisal",
+    "food_type": "Drink",
+    "action": "33",
+    "avatar": "https://randomuser.me/api/portraits/men/33.jpg"
+  },
+  {
+    "key": "34",
+    "name": "Harper Edwards",
+    "order_type": "Restaurant",
+    "location": "Sylhet",
+    "food_type": "Dessert",
+    "action": "34",
+    "avatar": "https://randomuser.me/api/portraits/women/34.jpg"
+  },
+  {
+    "key": "35",
+    "name": "Matthew Collins",
+    "order_type": "Restaurant",
+    "location": "Chittagong",
+    "food_type": "Drink",
+    "action": "35",
+    "avatar": "https://randomuser.me/api/portraits/men/35.jpg"
+  },
+  {
+    "key": "36",
+    "name": "Victoria Stewart",
+    "order_type": "Restaurant",
+    "location": "Rajshahi",
+    "food_type": "Drink",
+    "action": "36",
+    "avatar": "https://randomuser.me/api/portraits/women/36.jpg"
+  },
+  {
+    "key": "37",
+    "name": "Elijah Morris",
+    "order_type": "Restaurant",
+    "location": "Sylhet",
+    "food_type": "Snack",
+    "action": "37",
+    "avatar": "https://randomuser.me/api/portraits/men/37.jpg"
+  },
+  {
+    "key": "38",
+    "name": "Scarlett Rogers",
+    "order_type": "Restaurant",
+    "location": "Khulna",
+    "food_type": "Meal",
+    "action": "38",
+    "avatar": "https://randomuser.me/api/portraits/women/38.jpg"
+  },
+  {
+    "key": "39",
+    "name": "Jackson Reed",
+    "order_type": "Restaurant",
+    "location": "Barisal",
+    "food_type": "Drink",
+    "action": "39",
+    "avatar": "https://randomuser.me/api/portraits/men/39.jpg"
+  },
+  {
+    "key": "40",
+    "name": "Evelyn Cook",
+    "order_type": "Home-Made",
+    "location": "Barisal",
+    "food_type": "Dessert",
+    "action": "40",
+    "avatar": "https://randomuser.me/api/portraits/women/40.jpg"
+  },
+  {
+    "key": "41",
+    "name": "David Morgan",
+    "order_type": "Home-Made",
+    "location": "Dhaka",
+    "food_type": "Snack",
+    "action": "41",
+    "avatar": "https://randomuser.me/api/portraits/men/41.jpg"
+  },
+  {
+    "key": "42",
+    "name": "Zoe Bell",
+    "order_type": "Restaurant",
+    "location": "Chittagong",
+    "food_type": "Drink",
+    "action": "42",
+    "avatar": "https://randomuser.me/api/portraits/women/42.jpg"
+  },
+  {
+    "key": "43",
+    "name": "Samuel Murphy",
+    "order_type": "Home-Made",
+    "location": "Chittagong",
+    "food_type": "Snack",
+    "action": "43",
+    "avatar": "https://randomuser.me/api/portraits/men/43.jpg"
+  },
+  {
+    "key": "44",
+    "name": "Hannah Bailey",
+    "order_type": "Restaurant",
+    "location": "Barisal",
+    "food_type": "Dessert",
+    "action": "44",
+    "avatar": "https://randomuser.me/api/portraits/women/44.jpg"
+  },
+  {
+    "key": "45",
+    "name": "Jack Rivera",
+    "order_type": "Home-Made",
+    "location": "Barisal",
+    "food_type": "Drink",
+    "action": "45",
+    "avatar": "https://randomuser.me/api/portraits/men/45.jpg"
+  },
+  {
+    "key": "46",
+    "name": "Aria Cooper",
+    "order_type": "Restaurant",
+    "location": "Chittagong",
+    "food_type": "Snack",
+    "action": "46",
+    "avatar": "https://randomuser.me/api/portraits/women/46.jpg"
+  },
+  {
+    "key": "47",
+    "name": "Wyatt Richardson",
+    "order_type": "Home-Made",
+    "location": "Sylhet",
+    "food_type": "Meal",
+    "action": "47",
+    "avatar": "https://randomuser.me/api/portraits/men/47.jpg"
+  },
+  {
+    "key": "48",
+    "name": "Layla Cox",
+    "order_type": "Home-Made",
+    "location": "Khulna",
+    "food_type": "Dessert",
+    "action": "48",
+    "avatar": "https://randomuser.me/api/portraits/women/48.jpg"
+  },
+  {
+    "key": "49",
+    "name": "Leo Bennett",
+    "order_type": "Restaurant",
+    "location": "Chittagong",
+    "food_type": "Drink",
+    "action": "49",
+    "avatar": "https://randomuser.me/api/portraits/men/49.jpg"
+  },
+  {
+    "key": "50",
+    "name": "Nora Foster",
+    "order_type": "Home-Made",
+    "location": "Sylhet",
+    "food_type": "Drink",
+    "action": "50",
+    "avatar": "https://randomuser.me/api/portraits/women/50.jpg"
+  }
+]
+
+  
+
+  const totalPaginationData = allPostListe.length
 
 
 
-    const onChange = e => {
-        setValue(e.target.value);
-    };
+
+
+
+    // useEffect(() => {
+    //   refetch(); // Refetch the data when searchText, currentPage, or perPage changes
+    // }, [currentPage, perPage, refetch]);
+
+    useEffect(() => {
+    }, [currentPage, perPage]);
+
 
     return (
         <div>
             <Space direction="vertical" style={{ marginBottom: "20px", background: "#00C49A", borderRadius: "20px" }}>
-                <Search placeholder="Enter search name" onSearch={onSearch} enterButton
+                <Search placeholder="Enter search name"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    enterButton
                     className="custom-search-height"
                 />
             </Space>
 
             <Table
                 columns={columns}
-                dataSource={data}
+                dataSource={allPostListe}
+                pagination={{
+                    current: currentPage,
+                    pageSize: perPage,
+                    onChange: (page, pageSize) => {
+                        setCurrentPage(page);
+                        setPerPage(pageSize);
+
+                    }
+                }
+                }
             />
 
 
@@ -346,6 +745,18 @@ const PostListing = () => {
                 </div>
             </Modal >
 
+            {/* pagination */}
+            {/* <div className="flex justify-end pt-4">
+        <Pagination
+          current={currentPage}
+          pageSize={perPage}
+          total={totalPaginationData || 0}
+          onChange={(page, pageSize) => {
+            setCurrentPage(page)
+            setPerPage(pageSize)
+          }}
+        />
+      </div> */}
         </div >
     );
 };
