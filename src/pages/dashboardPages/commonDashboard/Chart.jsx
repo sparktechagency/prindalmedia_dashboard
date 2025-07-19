@@ -9,35 +9,20 @@ import {
   YAxis,
 } from "recharts"
 
-const data = [
-  { month: "Jan", value: 1000 },
-  { month: "Feb", value: 3000 },
-  { month: "Mar", value: 2000 },
-  { month: "Apr", value: 4500 },
-  { month: "May", value: 3500 },
-  { month: "Jun", value: 4000 },
-  { month: "Jul", value: 2500 },
-]
+
+export default function Chart({chartData}) {
+
+
+
+ const data = chartData?.map(item => ({
+    month: item.month,
+    value: Number(item.count),
+  }));
+
+
 
 const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    const currentIndex = data.findIndex((item) => item.month === label)
-    const previousValue = currentIndex > 0 ? data[currentIndex - 1].value : 0
-    const currentValue = payload[0].value
-    const difference = currentValue - previousValue
-    const formattedDifference = (difference / 1000).toFixed(1)
-
-    const date = new Date()
-    const day = date.getDate()
-    const monthNames = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ]
-    const currentMonth = monthNames[date.getMonth()]
-    const hours = date.getHours()
-    const minutes = date.getMinutes()
-    const formattedTime = `${hours}:${minutes < 10 ? "0" + minutes : minutes}`
-
+   if (active && payload && payload.length) {
     return (
       <div
         style={{
@@ -47,20 +32,8 @@ const CustomTooltip = ({ active, payload, label }) => {
         }}
       >
         <p style={{ fontWeight: 600, color: "#333", margin: "0 0 4px 0" }}>
-          {difference > 0 ? "+" : ""}
-          {formattedDifference}k
+         Total: {payload[0].value}
         </p>
-        <p style={{ fontSize: "12px", color: "#888", margin: "0" }}>
-          {day} {currentMonth}, {formattedTime}
-        </p>
-        <div
-          style={{
-            width: "8px",
-            height: "8px",
-            backgroundColor: "#4ade80",
-            margin: "4px auto 0",
-          }}
-        ></div>
       </div>
     )
   }
@@ -72,13 +45,7 @@ const formatYAxis = (value) => {
   return `$${value / 1000}k`
 }
 
-export default function Chart({chartData}) {
- chartData?.map((i)=>{
-  console.log(i.month);
-  console.log(i.count);
-  
- })
-  
+
   return (
     <div
       style={{

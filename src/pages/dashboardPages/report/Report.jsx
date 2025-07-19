@@ -1,9 +1,11 @@
 
-import React, { useState } from 'react';
-import { Input, Space, Table, Form, Radio } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Input, Space, Table, Form, Radio, Pagination } from 'antd';
 import { AudioOutlined } from '@ant-design/icons';
 const { Search } = Input;
 import { Button, Modal } from 'antd';
+import { useDetailsReportQuery, useGetReportsQuery } from '../../../redux/dashboardFeatures/activeReport/dashboardReportApi';
+import moment from 'moment';
 
 
 
@@ -13,7 +15,17 @@ const Report = () => {
     const [searchText, setSearchText] = useState('')
     const [modalOpenOne, setModalOpenOne] = useState(false)
     const [value, setValue] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [perPage, setPerPage] = useState(4);
+    const [detailsId, setDetailsId] = useState('')
 
+
+    const { data: getReports, refetch } = useGetReportsQuery({ per_page: perPage, page: currentPage })
+    const allReport = getReports?.data?.data
+    const totalPaginationData = getReports?.data?.total
+
+    const { data: singleReport } = useDetailsReportQuery(detailsId)
+    const singleReportData = singleReport?.data
 
 
     // modal one
@@ -21,7 +33,8 @@ const Report = () => {
         console.log('click')
     }
 
-    const showModalOne = () => {
+    const showModalOne = (id) => {
+        setDetailsId(id)
         setModalOpenOne(true)
     }
 
@@ -81,19 +94,23 @@ const Report = () => {
             title: 'Name',
             dataIndex: 'name',
             render: (_, record) => (
-                <div className='flex items-center gap-2'>
-                    {/* <img src={record.avatar} alt="" className='w-[50px] rounded-full' /> */}
-                    <p className='font-semibold'>{record.name}</p>
+                <div className=''>
+                    <p className='font-semibold'>{record?.reporter_info?.name}</p>
                 </div>
             ),
         },
         {
             title: 'Email',
             dataIndex: 'email',
+            render: (_, record) => (
+                <div className=''>
+                    <p className='font-semibold'>{record?.reporter_info?.email}</p>
+                </div>
+            ),
         },
         {
             title: 'Description',
-            dataIndex: 'description',
+            dataIndex: 'content',
             render: (text) => {
                 const words = text.split(' ');
                 const limited = words.slice(0, 10).join(' ');
@@ -110,7 +127,9 @@ const Report = () => {
             render: (_, record) => (
                 <div>
                     <p>{record.date}</p>
-                    <p className='text-gray-400'>{record.time}</p>
+                    <p className='font-semibold'> {moment(record?.reporter_info?.created_at).format('l')}</p>
+                    <p className='text-gray-400'> {moment(record?.reporter_info?.created_at).format('LT')}</p>
+
                 </div>
             )
         },
@@ -123,7 +142,7 @@ const Report = () => {
             render: (_, record) => (
                 <div className="flex items-center justify-end gap-3">
                     <button
-                        onClick={showModalOne}
+                        onClick={() => showModalOne(record?.id)}
                         className=" p-1 rounded bg-blue"
                     >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -143,98 +162,18 @@ const Report = () => {
     ];
 
 
-    const data = [
-        {
-            key: '1',
-            name: 'John Brown',
-            email: 'john.brown@example.com',
-            order_type: 'Home-Made',
-            location: 'Dhaka',
-            food_type: 'Meal',
-            description: 'Used abusive and inappropriate language towards another user.',
-            date: '2025-05-12',
-            time: '10:15 AM',
-            action: '1',
-            avatar: 'https://randomuser.me/api/portraits/women/8.jpg'
-        },
-        {
-            key: '2',
-            name: 'Emma Smith',
-            email: 'emma.smith@example.com',
-            order_type: 'Restaurant',
-            location: 'Shylet',
-            food_type: 'Drink',
-            description: 'Provided false or misleading information in the order section.',
-            date: '2025-05-11',
-            time: '02:30 PM',
-            action: '2',
-            avatar: 'https://randomuser.me/api/portraits/men/7.jpg'
-        },
-        {
-            key: '3',
-            name: 'Liam Johnson',
-            email: 'liam.johnson@example.com',
-            order_type: 'Restaurant',
-            location: 'Khulna',
-            food_type: 'Drink',
-            description: 'Posted offensive or disrespectful comments in the review section.',
-            date: '2025-05-10',
-            time: '06:45 PM',
-            action: '3',
-            avatar: 'https://randomuser.me/api/portraits/men/3.jpg'
-        },
-        {
-            key: '4',
-            name: 'Olivia Brown',
-            email: 'olivia.brown@example.com',
-            order_type: 'Home-Made',
-            location: 'Shylet',
-            food_type: 'Meal',
-            description: 'Suspected of using a fake profile or impersonating someone else.',
-            date: '2025-05-09',
-            time: '11:20 AM',
-            action: '4',
-            avatar: 'https://randomuser.me/api/portraits/women/4.jpg'
-        },
-        {
-            key: '5',
-            name: 'Noah Williams',
-            email: 'noah.williams@example.com',
-            order_type: 'Restaurant',
-            location: 'Dhaka',
-            food_type: 'Drink',
-            description: 'Repeatedly posted spam content or promotional links.',
-            date: '2025-05-08',
-            time: '08:10 PM',
-            action: '5',
-            avatar: 'https://randomuser.me/api/portraits/men/5.jpg'
-        },
-        {
-            key: '6',
-            name: 'Ava Jones',
-            email: 'ava.jones@example.com',
-            order_type: 'Home-Made',
-            location: 'Dhaka',
-            food_type: 'Meal',
-            description: 'Violated community guidelines or engaged in restricted activities.',
-            date: '2025-05-07',
-            time: '01:00 PM',
-            action: '6',
-            avatar: 'https://randomuser.me/api/portraits/women/6.jpg'
-        },
-    ];
 
 
-
-    const onChange = e => {
-        setValue(e.target.value);
-    };
+    useEffect(() => {
+        refetch()
+    }, [perPage, currentPage, refetch]);
 
     return (
         <div>
             <Table
                 columns={columns}
-                dataSource={data}
+                dataSource={allReport}
+                pagination={false}
             />
 
 
@@ -250,14 +189,11 @@ const Report = () => {
                 onOk={handleMondalOpenOneOk}
                 onCancel={handleMondalCancelOneOk}
                 footer={
-                    <div className='pb-4 flex items-center gap-4 justify-end mx-4'>
-                        <button onClick={handleMondalCancelOneOk} className='p-2 px-8 border border-[#ccc] text-[16px] rounded'>Cancel</button>
-                        <button  className='bg-primary p-2 px-8 text-[#ffff] text-[16px] rounded'>Save</button>
-                    </div>
+                    false
                 }
                 width={600}
                 className='custom-service-modal'
-                maskStyle={{ backgroundColor: 'rgba(134, 134, 134, 0.4)' }}
+
             >
 
                 <div className="p-8">
@@ -265,21 +201,21 @@ const Report = () => {
                         <div className="flex items-center  -mx-2">
                             <img
                                 className="object-cover mx-2 rounded-full w-14 shrink-0 h-14 "
-                                src="https://randomuser.me/api/portraits/women/8.jpg"
+                                src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${singleReportData?.reporter_info?.avatar}`}
                                 alt="Robert"
                             />
                             <div className="mx-4">
                                 <h1 className="font-semibold text-[24px] text-[#000000]">
-                                    John Brown
+                                    {singleReportData?.reporter_info?.name}
                                 </h1>
                                 <div className="flex items-center">
-                                    john.brown@example.com
+                                  {singleReportData?.reporter_info?.email}
                                 </div>
                             </div>
                         </div>
-                        <div className='pt-8'>
+                        {/* <div className='pt-8'>
                             <img src="/login/photo1.png" alt="" className='w-full h-[300px] object-cover rounded-[20px]' />
-                        </div>
+                        </div> */}
 
                         <div className='flex justify-between items-center py-4'>
                             <div>
@@ -292,13 +228,25 @@ const Report = () => {
 
 
                         <div>
-                            <p className='text-[14px] text-[#454545]'>The user in question has been reported for submitting false or misleading information during the ordering process. Upon thorough review and verification of the user's order history, it was found that multiple discrepancies exist between the information provided and the actual facts verified from our end. This issue not only violates our platform’s community guidelines and terms of use but also undermines the trust and reliability of our ordering system.
-
-                                In the specific order under investigation, the user entered details that did not correspond with their actual location, selected items, or payment intent. For instance, the order claimed to originate from a verified address in the Dhaka region; however, our internal delivery team later confirmed that the address was either incomplete or non-existent. This caused delays, confusion, and wastage of valuable time and logistics resources.</p>
+                            <p className='text-[14px] text-[#454545]'>{singleReportData?.content}</p>
                         </div>
                     </Form>
                 </div>
             </Modal >
+
+
+            {/* pagination */}
+            <div className="flex justify-end pt-4">
+                <Pagination
+                    current={currentPage}
+                    pageSize={perPage}
+                    total={totalPaginationData || 0}
+                    onChange={(page, pageSize) => {
+                        setCurrentPage(page)
+                        setPerPage(pageSize)
+                    }}
+                />
+            </div>
 
         </div >
     );

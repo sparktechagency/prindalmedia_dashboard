@@ -214,7 +214,7 @@ const PostListing = () => {
         footer={null}
         width={600}
         className='custom-service-modal'
-        maskStyle={{ backgroundColor: 'rgba(134, 134, 134, 0.4)' }}
+       
       >
 
         <div className="p-8">

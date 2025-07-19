@@ -2,21 +2,49 @@ import { EnvironmentOutlined, PhoneOutlined, UserOutlined } from "@ant-design/ic
 import { Button, Form, Input, Upload } from "antd"
 import { useForm } from "antd/es/form/Form"
 import { UploadCloud } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useGetProfileQuery, useUpdateProfileMutation } from "../../../redux/dashboardFeatures/myProfile/dashboardProfileApi"
+import toast from "react-hot-toast"
 
 
 const MyProfile = () => {
     const [form] = useForm()
     const [ImageFileList, setImageFileList] = useState([]);
 
-    const onFinish = (values) => {
-        console.log(values)
+
+    const [updateProfile] = useUpdateProfileMutation()
+    const { data: getProfile, refetch } = useGetProfileQuery()
+    const getProfileData = getProfile?.data
+console.log(getProfileData.first_name)
 
 
+    useEffect(() => {
+        if (getProfileData) {
+            form.setFieldsValue({
+                first_name: getProfileData?.first_name,
+                last_name: getProfileData?.last_name,
+                contact_number: getProfileData?.contact_number,
+                location: getProfileData?.location,
+                // image will be handled separately
+            });
+
+            if (getProfileData?.image) {
+                setImageFileList([
+                    {
+                        uid: '-1',
+                        name: 'image.png',
+                        status: 'done',
+                        url: getProfileData?.image, // show image preview
+                    },
+                ]);
+            }
+        }
+    }, [getProfileData]);
+
+
+
+    const onFinish = async (values) => {
         const formData = new FormData();
-
-
-
         if (ImageFileList.length > 0) {
             const uploadedFile = ImageFileList.find(file => file.originFileObj);
 
@@ -27,15 +55,33 @@ const MyProfile = () => {
 
         formData.append("first_name", values.first_name);
         formData.append("last_name", values.last_name);
-        formData.append("phone", values.phone);
-        formData.append("address", values.address);
+        formData.append("contact_number", values.contact_number);
+        // formData.append("location", values.location);
 
-        formData.forEach((value, key) => {
-            console.log(`${key}:`, value);
-        })
+        // formData.forEach((value, key) => {
+        //     console.log(`${key}:`, value);
+        // })
 
-        setFileList([]);
-        form.resetFields()
+        try {
+            const res = await updateProfile(formData).unwrap()
+            console.log(res)
+            if (res.status === true) {
+                toast.success(res?.message)
+                setImageFileList([]);
+                form.resetFields()
+
+            } else {
+                toast.error(res?.message)
+            }
+        } catch (error) {
+            if (error) {
+                console.log(error)
+                toast.error(error?.data?.data?.message?.location)
+            }
+        }
+
+
+
 
     }
     return (
@@ -117,7 +163,7 @@ const MyProfile = () => {
                 {/* contact number */}
                 <div>
                     <Form.Item
-                        name="phone"
+                        name="contact_number"
                         rules={[{ required: true, message: "Please enter your contact number" }]}
                     // style={{ width: "50%" }}
                     >
@@ -136,7 +182,7 @@ const MyProfile = () => {
                 {/* location */}
                 <div>
                     <Form.Item
-                        name="address"
+                        name="location"
                         rules={[{ required: true, message: "Please enter your Location" }]}
                     // style={{ width: "50%" }}
                     >

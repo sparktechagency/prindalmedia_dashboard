@@ -5,11 +5,17 @@ import Sider from "antd/es/layout/Sider";
 import SubMenu from "antd/es/menu/SubMenu";
 import { Lock, User2Icon } from "lucide-react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
+import { useGetProfileQuery } from "../redux/dashboardFeatures/myProfile/dashboardProfileApi";
 
 
 const DashboardLayout = () => {
     const navigate = useNavigate();
     const location = useLocation();
+
+
+    const {data:getProfile,refetch} = useGetProfileQuery() 
+    const getProfileData = getProfile?.data
+
 
     const sidebarMenuItems = [
         {
@@ -372,10 +378,10 @@ const DashboardLayout = () => {
 
                         <div className="pb-4 mx-2">
                             <Link to="/login">
-                                <button className="gap-3 w-full flex justify-between items-center p-3 bg-[#FFE8E8] text-base font-popping rounded-md font-semibold text-[#FF0000] ">
+                                <button className="gap-3 w-full flex justify-between items-center p-3 bg-[#FFE8E8] text-base font-popping rounded-md font-semibold  ">
                                     <div className="flex items-center gap-2">
-                                        <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="" className="w-[30px] rounded-full object-cover" />
-                                        Logout
+                                        <img src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${getProfileData?.avatar}`} alt="" className="w-[30px] rounded-full object-cover" />
+                                        {getProfileData?.name}
                                     </div>
 
                                     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
