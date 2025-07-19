@@ -3,7 +3,7 @@ import { Button, Form, Input, Upload } from "antd"
 import { useForm } from "antd/es/form/Form"
 import { UploadCloud } from "lucide-react"
 import { useEffect, useState } from "react"
-import { useGetProfileQuery, useUpdateProfileMutation } from "../../../redux/dashboardFeatures/myProfile/dashboardProfileApi"
+import { useDashboardProfileQuery, useGetProfileQuery, useUpdateProfileMutation } from "../../../redux/dashboardFeatures/myProfile/dashboardProfileApi"
 import toast from "react-hot-toast"
 
 
@@ -13,33 +13,38 @@ const MyProfile = () => {
 
 
     const [updateProfile] = useUpdateProfileMutation()
-    const { data: getProfile, refetch } = useGetProfileQuery()
+    const { data: getProfile,  } = useGetProfileQuery()
     const getProfileData = getProfile?.data
-console.log(getProfileData.first_name)
+
+    const {data:getDashboardProfile, refetch, isLoading } = useDashboardProfileQuery()
+    const dashboardProfileData = getDashboardProfile?.data
+
+    console.log(dashboardProfileData?.avatar);
+    
 
 
     useEffect(() => {
-        if (getProfileData) {
+        if (dashboardProfileData) {
             form.setFieldsValue({
-                first_name: getProfileData?.first_name,
-                last_name: getProfileData?.last_name,
-                contact_number: getProfileData?.contact_number,
-                location: getProfileData?.location,
+                name: dashboardProfileData?.name,
+                last_name: dashboardProfileData?.last_name,
+                contact_number: dashboardProfileData?.contact_number,
+                location: dashboardProfileData?.location,
                 // image will be handled separately
             });
 
-            if (getProfileData?.image) {
+            if (dashboardProfileData?.avatar) {
                 setImageFileList([
                     {
                         uid: '-1',
                         name: 'image.png',
                         status: 'done',
-                        url: getProfileData?.image, // show image preview
+                       url: `${import.meta.env.VITE_API_IMAGE_BASE_URL}${dashboardProfileData?.avatar}`,// show image preview
                     },
                 ]);
             }
         }
-    }, [getProfileData]);
+    }, [dashboardProfileData]);
 
 
 
@@ -53,7 +58,7 @@ console.log(getProfileData.first_name)
             }
         }
 
-        formData.append("first_name", values.first_name);
+        formData.append("name", values.name);
         formData.append("last_name", values.last_name);
         formData.append("contact_number", values.contact_number);
         // formData.append("location", values.location);
@@ -127,7 +132,7 @@ console.log(getProfileData.first_name)
                 {/* first name & last name */}
                 <div className="flex justify-between gap-3">
                     <Form.Item
-                        name="first_name"
+                        name="name"
                         rules={[{ required: true, message: "Please enter your First name" }]}
                         style={{ width: "50%" }}
                     >

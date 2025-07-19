@@ -12,6 +12,7 @@ import DashboardCreateNewPassword from "../pages/dashboardPages/authentication/D
 import Report from "../pages/dashboardPages/report/Report";
 import TramsAandCondition from "../pages/dashboardPages/tramsAandCondition/TramsAandCondition";
 import PrivacyPolicy from "../pages/dashboardPages/privacyPolicy/PrivacyPolicy";
+import Notification from "../pages/dashboardPages/notification/Notification";
 
 
 const router = createBrowserRouter([
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
             {
                 path: "/privacy-policy",
                 element: <PrivacyPolicy />
+            },
+            {
+                path: "/notification",
+                element: <Notification />
             },
 
         ]

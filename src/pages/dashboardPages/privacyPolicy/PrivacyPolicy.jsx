@@ -1,17 +1,57 @@
 
 import { Button } from "antd";
 import JoditEditor from "jodit-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useGetSettingQuery, useUpdateSettingMutation } from "../../../redux/dashboardFeatures/seetings/dashboardSetting";
+
+import toast from "react-hot-toast";
+
 
 
 const PrivacyPolicy = () => {
   const [content, setContent] = useState('');
   const editor = useRef(null);
 
+  const { data: getSettingData,refetch, isLoading} = useGetSettingQuery()
+  const settingData = getSettingData?.data
 
-  const handleUpdate = () => {
-    console.log('cickk')
-  }
+  const[updateSetting] = useUpdateSettingMutation()
+
+
+
+  useEffect(() => {
+    if (settingData?.privacy_policy) {
+      setContent(settingData?.privacy_policy)
+    }
+  }, [settingData])
+
+
+
+    const handleUpdate = async () => {
+    const formData = new FormData();
+    formData.append("privacy_policy", content);
+
+
+    //  formData.forEach((value, key) => {
+    //   console.log(key, value);
+    // });
+
+
+    try {
+      const res = await updateSetting(formData).unwrap();
+      console.log(res)
+      if (res?.status === true) {
+        toast.success(res?.message)
+          refetch();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  if (isLoading) return <div>Loading...</div>;
+
   return (
     <>
       <div className="w-full mt-6">
@@ -22,7 +62,6 @@ const PrivacyPolicy = () => {
           //   height: "400px", // Set your desired height
           // }}
           onChange={(newContent) => {
-            console.log("Editor Content:", newContent);
             setContent(newContent);
           }}
         />
@@ -37,6 +76,8 @@ const PrivacyPolicy = () => {
           Save
         </Button>
       </div>
+
+
     </>
   )
 }

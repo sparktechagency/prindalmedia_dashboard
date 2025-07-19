@@ -268,6 +268,10 @@ const DashboardLayout = () => {
     }
 
 
+    const handleNotification = () =>{
+    navigate('/notification')
+    }
+
 
     return (
         <>
@@ -422,7 +426,9 @@ const DashboardLayout = () => {
                                 style={{ zIndex: 11 }}
                             >
                                 {/* avater */}
-                                <div className="flex justify-center items-center gap-4">
+                                <div 
+                                onClick={handleNotification}
+                                className="flex justify-center items-center gap-4">
                                     <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <rect width="38" height="38" rx="19" fill="#76F4D9" fillOpacity="0.1" />
                                         <mask id="mask0_183_1250" maskUnits="userSpaceOnUse" x="7" y="7" width="24" height="24">
@@ -460,5 +466,3 @@ const DashboardLayout = () => {
 export default DashboardLayout;
 
 
-// Menu.Item-------- bg-color add
-// Menu.Item-------- bg-color add

@@ -18,9 +18,16 @@ const dashboardProfileApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ['profile'],
         }),
+        dashboardProfile: builder.query({
+            query: () => ({
+                url: `/admin/get-admin-profile`,
+                method: "GET",
+            }),
+            invalidatesTags: ['profile'],
+        }),
      
     })
 })
 
 
-export const {useUpdateProfileMutation,useGetProfileQuery} = dashboardProfileApi;
+export const {useUpdateProfileMutation,useGetProfileQuery,useDashboardProfileQuery} = dashboardProfileApi;
