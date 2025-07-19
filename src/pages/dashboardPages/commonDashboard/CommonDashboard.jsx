@@ -1,15 +1,24 @@
+
+import { useGetCommonDashboardQuery } from "../../../redux/dashboardFeatures/commonDashboard/commonDashboardApi"
 import Chart from "./Chart"
 
 
 const CommonDashboard = () => {
+
+    const { data: getDashboard } = useGetCommonDashboardQuery()
+    const getCommonData = getDashboard?.data
+
+    const chartData = getCommonData?.monthly_signups_new_users
+
+
     return (
         <>
             <div className="grid grid-cols-12 gap-[20px]">
                 <div className="col-span-4 h-[149px] bg-[#ffff]  p-[20px]  flex justify-between items-center border rounded-[20px]">
-                    <div className="w-full flex justify-between ">
+                    <div className="w-full flex justify-between items-center ">
                         <div>
                             <h2 className=" font-OpenSans text-[24px] text-[#454545]">Monthly active users</h2>
-                            <h2 className="font-semibold font-OpenSans text-[36px] ">22k</h2>
+                            <h2 className="font-semibold font-OpenSans text-[36px] ">{getCommonData?.monthly_active_users}</h2>
                         </div>
                         <svg width="57" height="57" viewBox="0 0 57 57" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g clip-path="url(#clip0_183_1337)">
@@ -38,10 +47,10 @@ const CommonDashboard = () => {
                 </div>
 
                 <div className="col-span-4 h-[149px] bg-[#ffff]  p-[20px]  flex justify-between items-center border rounded-[20px]">
-                    <div className="w-full flex justify-between ">
+                    <div className="w-full flex justify-between items-center ">
                         <div>
                             <h2 className=" font-OpenSans text-[24px] text-[#454545]">Daily active users</h2>
-                            <h2 className="font-semibold font-OpenSans text-[36px] ">22k</h2>
+                            <h2 className="font-semibold font-OpenSans text-[36px] ">{getCommonData?.daily_active_users}</h2>
                         </div>
                         <svg width="57" height="57" viewBox="0 0 57 57" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g clip-path="url(#clip0_183_1347)">
@@ -66,10 +75,10 @@ const CommonDashboard = () => {
                 </div>
 
                 <div className="col-span-4 h-[149px] bg-[#ffff]  p-[20px]  flex justify-between items-center border rounded-[20px]">
-                    <div className="w-full flex justify-between ">
+                    <div className="w-full flex justify-between items-center ">
                         <div>
                             <h2 className=" font-OpenSans text-[24px] text-[#454545]">Sign up per month</h2>
-                            <h2 className="font-semibold font-OpenSans text-[36px] ">22k</h2>
+                            <h2 className="font-semibold font-OpenSans text-[36px] ">{getCommonData?.monthly_signups}</h2>
                         </div>
                         <svg width="57" height="57" viewBox="0 0 57 57" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g clip-path="url(#clip0_183_1356)">
@@ -110,7 +119,9 @@ const CommonDashboard = () => {
                 <h2 className="text-[36px] font-bold">Monthly active users</h2>
 
                 <div>
-                    <Chart />
+                    <Chart
+                        chartData={chartData}
+                    />
                 </div>
             </div>
         </>

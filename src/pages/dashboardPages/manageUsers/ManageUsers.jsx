@@ -5,6 +5,8 @@ import { AudioOutlined } from '@ant-design/icons';
 const { Search } = Input;
 import { Button, Modal } from 'antd';
 import Swal from 'sweetalert2';
+import { useDeleteUserMutation, useGetUsersQuery } from '../../../redux/dashboardFeatures/manageUsers/dashboardManageUsersApi';
+import toast from 'react-hot-toast';
 
 
 
@@ -16,313 +18,16 @@ const ManageUsers = () => {
   const [value, setValue] = useState(1);
   const [searchText, setSearchText] = useState('')
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(8);
+  const [perPage, setPerPage] = useState(7);
+  // const [deleteId,setDeleteId] = useState('')
 
 
-  const allUsers = [
-    {
-      "id": 1,
-      "name": "John Brown",
-      "email": "johnbrown@example.com",
-      "image": "https://randomuser.me/api/portraits/men/1.jpg"
-    },
-    {
-      "id": 2,
-      "name": "Emily White",
-      "email": "emilywhite@example.com",
-      "image": "https://randomuser.me/api/portraits/women/2.jpg"
-    },
-    {
-      "id": 3,
-      "name": "Michael Green",
-      "email": "michaelgreen@example.com",
-      "image": "https://randomuser.me/api/portraits/men/3.jpg"
-    },
-    {
-      "id": 4,
-      "name": "Sarah Johnson",
-      "email": "sarahjohnson@example.com",
-      "image": "https://randomuser.me/api/portraits/women/4.jpg"
-    },
-    {
-      "id": 5,
-      "name": "David Lee",
-      "email": "davidlee@example.com",
-      "image": "https://randomuser.me/api/portraits/men/5.jpg"
-    },
-    {
-      "id": 6,
-      "name": "Olivia Taylor",
-      "email": "oliviataylor@example.com",
-      "image": "https://randomuser.me/api/portraits/women/6.jpg"
-    },
-    {
-      "id": 7,
-      "name": "Chris Evans",
-      "email": "chrisevans@example.com",
-      "image": "https://randomuser.me/api/portraits/men/7.jpg"
-    },
-    {
-      "id": 8,
-      "name": "Sophia Martinez",
-      "email": "sophiamartinez@example.com",
-      "image": "https://randomuser.me/api/portraits/women/8.jpg"
-    },
-    {
-      "id": 9,
-      "name": "Daniel Wilson",
-      "email": "danielwilson@example.com",
-      "image": "https://randomuser.me/api/portraits/men/9.jpg"
-    },
-    {
-      "id": 10,
-      "name": "Ava Robinson",
-      "email": "avarobinson@example.com",
-      "image": "https://randomuser.me/api/portraits/women/10.jpg"
-    },
-    {
-      "id": 11,
-      "name": "Liam Thomas",
-      "email": "liamthomas@example.com",
-      "image": "https://randomuser.me/api/portraits/men/11.jpg"
-    },
-    {
-      "id": 12,
-      "name": "Mia Hall",
-      "email": "miahall@example.com",
-      "image": "https://randomuser.me/api/portraits/women/12.jpg"
-    },
-    {
-      "id": 13,
-      "name": "Noah Allen",
-      "email": "noahallen@example.com",
-      "image": "https://randomuser.me/api/portraits/men/13.jpg"
-    },
-    {
-      "id": 14,
-      "name": "Isabella Young",
-      "email": "isabellayoung@example.com",
-      "image": "https://randomuser.me/api/portraits/women/14.jpg"
-    },
-    {
-      "id": 15,
-      "name": "Ethan Hernandez",
-      "email": "ethanhernandez@example.com",
-      "image": "https://randomuser.me/api/portraits/men/15.jpg"
-    },
-    {
-      "id": 16,
-      "name": "Amelia King",
-      "email": "ameliaking@example.com",
-      "image": "https://randomuser.me/api/portraits/women/16.jpg"
-    },
-    {
-      "id": 17,
-      "name": "James Wright",
-      "email": "jameswright@example.com",
-      "image": "https://randomuser.me/api/portraits/men/17.jpg"
-    },
-    {
-      "id": 18,
-      "name": "Charlotte Lopez",
-      "email": "charlottelopez@example.com",
-      "image": "https://randomuser.me/api/portraits/women/18.jpg"
-    },
-    {
-      "id": 19,
-      "name": "Benjamin Hill",
-      "email": "benjaminhill@example.com",
-      "image": "https://randomuser.me/api/portraits/men/19.jpg"
-    },
-    {
-      "id": 20,
-      "name": "Abigail Scott",
-      "email": "abigailscott@example.com",
-      "image": "https://randomuser.me/api/portraits/women/20.jpg"
-    },
-    {
-      "id": 21,
-      "name": "Lucas Green",
-      "email": "lucasgreen@example.com",
-      "image": "https://randomuser.me/api/portraits/men/21.jpg"
-    },
-    {
-      "id": 22,
-      "name": "Emily Baker",
-      "email": "emilybaker@example.com",
-      "image": "https://randomuser.me/api/portraits/women/22.jpg"
-    },
-    {
-      "id": 23,
-      "name": "Logan Adams",
-      "email": "loganadams@example.com",
-      "image": "https://randomuser.me/api/portraits/men/23.jpg"
-    },
-    {
-      "id": 24,
-      "name": "Ella Nelson",
-      "email": "ellanelson@example.com",
-      "image": "https://randomuser.me/api/portraits/women/24.jpg"
-    },
-    {
-      "id": 25,
-      "name": "Jacob Carter",
-      "email": "jacobcarter@example.com",
-      "image": "https://randomuser.me/api/portraits/men/25.jpg"
-    },
-    {
-      "id": 26,
-      "name": "Grace Mitchell",
-      "email": "gracemitchell@example.com",
-      "image": "https://randomuser.me/api/portraits/women/26.jpg"
-    },
-    {
-      "id": 27,
-      "name": "Alexander Perez",
-      "email": "alexanderperez@example.com",
-      "image": "https://randomuser.me/api/portraits/men/27.jpg"
-    },
-    {
-      "id": 28,
-      "name": "Chloe Roberts",
-      "email": "chloeroberts@example.com",
-      "image": "https://randomuser.me/api/portraits/women/28.jpg"
-    },
-    {
-      "id": 29,
-      "name": "Henry Turner",
-      "email": "henryturner@example.com",
-      "image": "https://randomuser.me/api/portraits/men/29.jpg"
-    },
-    {
-      "id": 30,
-      "name": "Lily Phillips",
-      "email": "lilyphillips@example.com",
-      "image": "https://randomuser.me/api/portraits/women/30.jpg"
-    },
-    {
-      "id": 31,
-      "name": "Sebastian Campbell",
-      "email": "sebastiancampbell@example.com",
-      "image": "https://randomuser.me/api/portraits/men/31.jpg"
-    },
-    {
-      "id": 32,
-      "name": "Sofia Parker",
-      "email": "sofiaparker@example.com",
-      "image": "https://randomuser.me/api/portraits/women/32.jpg"
-    },
-    {
-      "id": 33,
-      "name": "Aiden Evans",
-      "email": "aidenevans@example.com",
-      "image": "https://randomuser.me/api/portraits/men/33.jpg"
-    },
-    {
-      "id": 34,
-      "name": "Harper Edwards",
-      "email": "harperedwards@example.com",
-      "image": "https://randomuser.me/api/portraits/women/34.jpg"
-    },
-    {
-      "id": 35,
-      "name": "Matthew Collins",
-      "email": "matthewcollins@example.com",
-      "image": "https://randomuser.me/api/portraits/men/35.jpg"
-    },
-    {
-      "id": 36,
-      "name": "Victoria Stewart",
-      "email": "victoriastewart@example.com",
-      "image": "https://randomuser.me/api/portraits/women/36.jpg"
-    },
-    {
-      "id": 37,
-      "name": "Elijah Morris",
-      "email": "elijahmorris@example.com",
-      "image": "https://randomuser.me/api/portraits/men/37.jpg"
-    },
-    {
-      "id": 38,
-      "name": "Scarlett Rogers",
-      "email": "scarlettrogers@example.com",
-      "image": "https://randomuser.me/api/portraits/women/38.jpg"
-    },
-    {
-      "id": 39,
-      "name": "Jackson Reed",
-      "email": "jacksonreed@example.com",
-      "image": "https://randomuser.me/api/portraits/men/39.jpg"
-    },
-    {
-      "id": 40,
-      "name": "Evelyn Cook",
-      "email": "evelyncook@example.com",
-      "image": "https://randomuser.me/api/portraits/women/40.jpg"
-    },
-    {
-      "id": 41,
-      "name": "David Morgan",
-      "email": "davidmorgan@example.com",
-      "image": "https://randomuser.me/api/portraits/men/41.jpg"
-    },
-    {
-      "id": 42,
-      "name": "Zoe Bell",
-      "email": "zoebell@example.com",
-      "image": "https://randomuser.me/api/portraits/women/42.jpg"
-    },
-    {
-      "id": 43,
-      "name": "Samuel Murphy",
-      "email": "samuelmurphy@example.com",
-      "image": "https://randomuser.me/api/portraits/men/43.jpg"
-    },
-    {
-      "id": 44,
-      "name": "Hannah Bailey",
-      "email": "hannahbailey@example.com",
-      "image": "https://randomuser.me/api/portraits/women/44.jpg"
-    },
-    {
-      "id": 45,
-      "name": "Jack Rivera",
-      "email": "jackrivera@example.com",
-      "image": "https://randomuser.me/api/portraits/men/45.jpg"
-    },
-    {
-      "id": 46,
-      "name": "Aria Cooper",
-      "email": "ariacooper@example.com",
-      "image": "https://randomuser.me/api/portraits/women/46.jpg"
-    },
-    {
-      "id": 47,
-      "name": "Wyatt Richardson",
-      "email": "wyattrichardson@example.com",
-      "image": "https://randomuser.me/api/portraits/men/47.jpg"
-    },
-    {
-      "id": 48,
-      "name": "Layla Cox",
-      "email": "laylacox@example.com",
-      "image": "https://randomuser.me/api/portraits/women/48.jpg"
-    },
-    {
-      "id": 49,
-      "name": "Leo Bennett",
-      "email": "leobennett@example.com",
-      "image": "https://randomuser.me/api/portraits/men/49.jpg"
-    },
-    {
-      "id": 50,
-      "name": "Nora Foster",
-      "email": "norafoster@example.com",
-      "image": "https://randomuser.me/api/portraits/women/50.jpg"
-    }
-  ]
+  const { data: getUsers, refetch } = useGetUsersQuery({ per_page: perPage, search: searchText, page: currentPage })
+  const allUsers = getUsers?.data?.data
+  const totalPaginationData = getUsers?.data?.total
 
-  const totalPaginationData = allUsers.length
+
+  const [deleteUser] = useDeleteUserMutation()
 
 
 
@@ -360,46 +65,43 @@ const ManageUsers = () => {
   }
 
 
+  const handleDelete = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "Deleted this user!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      });
 
-
-  const suffix = (
-    <AudioOutlined
-      style={{
-        fontSize: 16,
-        color: '#00C49A',
-      }}
-    />
-  );
-
-  const handleDelete = () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Deleted this user!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!"
-    }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "Your profile has been deleted.",
-          icon: "success"
-        });
+        // Call the delete API
+        const res = await deleteUser(id).unwrap();
+        if (res.status === true) {
+          toast.success(res?.message)
+          refetch()
+        } else {
+          toast.error(res?.message)
+        }
       }
-    });
-  }
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
+  };
 
 
   const columns = [
-
     {
       title: 'Image',
       dataIndex: 'image',
       render: (_, record) => (
         <div className=''>
-          <img src={record.image} alt="" className='w-[50px] rounded-full' />
+          <img
+            src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${record.avatar}`}
+            alt="" className='w-[50px] rounded-full' />
         </div>
       ),
     },
@@ -440,7 +142,7 @@ const ManageUsers = () => {
 
 
           <button
-            onClick={() => handleDelete()}
+            onClick={() => handleDelete(record?.id)}
             className="bg-secondary px-3 py-1 rounded "
           >
             <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -457,12 +159,9 @@ const ManageUsers = () => {
 
 
 
-  // useEffect(() => {
-  //   refetch(); // Refetch the data when searchText, currentPage, or perPage changes
-  // }, [currentPage, perPage, refetch]);
-
   useEffect(() => {
-  }, [currentPage, perPage]);
+    refetch()
+  }, [perPage, searchText, currentPage, refetch]);
 
 
 
@@ -485,21 +184,13 @@ const ManageUsers = () => {
       <Table
         columns={columns}
         dataSource={allUsers}
-        pagination={{
-          current: currentPage,
-          pageSize: perPage,
-          onChange: (page, pageSize) => {
-            setCurrentPage(page);
-            setPerPage(pageSize);
-
-          }
-        }
-        }/>
+        pagination={false}
+      />
 
 
 
       {/* pagination */}
-      {/* <div className="flex justify-end pt-4">
+      <div className="flex justify-end pt-4">
         <Pagination
           current={currentPage}
           pageSize={perPage}
@@ -509,7 +200,7 @@ const ManageUsers = () => {
             setPerPage(pageSize)
           }}
         />
-      </div> */}
+      </div>
     </div>
   );
 };

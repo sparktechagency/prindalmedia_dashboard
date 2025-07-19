@@ -72,7 +72,13 @@ const formatYAxis = (value) => {
   return `$${value / 1000}k`
 }
 
-export default function Chart() {
+export default function Chart({chartData}) {
+ chartData?.map((i)=>{
+  console.log(i.month);
+  console.log(i.count);
+  
+ })
+  
   return (
     <div
       style={{
