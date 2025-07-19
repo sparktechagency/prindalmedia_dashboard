@@ -19,7 +19,6 @@ const ManageUsers = () => {
   const [searchText, setSearchText] = useState('')
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(7);
-  // const [deleteId,setDeleteId] = useState('')
 
 
   const { data: getUsers, refetch } = useGetUsersQuery({ per_page: perPage, search: searchText, page: currentPage })

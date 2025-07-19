@@ -17,6 +17,6 @@ export const baseApi = createApi({
         }
     }),
     // refresh for this tag
-    tagTypes: ["auth","commonDashboard","user",],
+    tagTypes: ["auth","commonDashboard","user","postList",],
     endpoints: () => ({}),
 });
