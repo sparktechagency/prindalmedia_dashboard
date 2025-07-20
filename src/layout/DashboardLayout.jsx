@@ -6,6 +6,7 @@ import SubMenu from "antd/es/menu/SubMenu";
 import { Lock, User2Icon } from "lucide-react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
 import { useGetProfileQuery } from "../redux/dashboardFeatures/myProfile/dashboardProfileApi";
+import { useTotalGetNotificationQuery } from "../redux/dashboardFeatures/notification/dashboardNotificationApi";
 
 
 const DashboardLayout = () => {
@@ -15,6 +16,9 @@ const DashboardLayout = () => {
 
     const {data:getProfile,refetch} = useGetProfileQuery() 
     const getProfileData = getProfile?.data
+
+    const {data:notificationCount} = useTotalGetNotificationQuery()
+  
 
 
     const sidebarMenuItems = [
@@ -441,7 +445,7 @@ const DashboardLayout = () => {
                                 {/* avater */}
                                 <div 
                                 onClick={handleNotification}
-                                className="flex justify-center items-center gap-4">
+                                className="flex justify-center items-center gap-4 relative">
                                     <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <rect width="38" height="38" rx="19" fill="#76F4D9" fillOpacity="0.1" />
                                         <mask id="mask0_183_1250" maskUnits="userSpaceOnUse" x="7" y="7" width="24" height="24">
@@ -451,6 +455,7 @@ const DashboardLayout = () => {
                                             <path d="M11 26V24H13V17C13 15.6167 13.4167 14.3875 14.25 13.3125C15.0833 12.2375 16.1667 11.5333 17.5 11.2V10.5C17.5 10.0833 17.6458 9.72917 17.9375 9.4375C18.2292 9.14583 18.5833 9 19 9C19.4167 9 19.7708 9.14583 20.0625 9.4375C20.3542 9.72917 20.5 10.0833 20.5 10.5V11.2C21.8333 11.5333 22.9167 12.2375 23.75 13.3125C24.5833 14.3875 25 15.6167 25 17V24H27V26H11ZM19 29C18.45 29 17.9792 28.8042 17.5875 28.4125C17.1958 28.0208 17 27.55 17 27H21C21 27.55 20.8042 28.0208 20.4125 28.4125C20.0208 28.8042 19.55 29 19 29Z" fill="#00C49A" />
                                         </g>
                                     </svg>
+                                    <p className="text-red-500 absolute font-semibold left-6 -top-6">{notificationCount?.unread_count}</p>
                                 </div>
                             </div>
                         </div>

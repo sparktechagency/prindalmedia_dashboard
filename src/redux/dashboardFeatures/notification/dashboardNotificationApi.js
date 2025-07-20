@@ -10,8 +10,29 @@ const dashboardNotificationApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ['notification'],
         }),
+        postReadNotification: builder.mutation({
+            query: (id) => ({
+                url: `/read?notification_id=${id}`,
+                method: "POST",
+            }),
+            invalidatesTags: ['notification'],
+        }),
+        readAllNotification: builder.mutation({
+            query: () => ({
+                url: `/read-all`,
+                method: "POST",
+            }),
+            invalidatesTags: ['notification'],
+        }),
+        totalGetNotification: builder.query({
+            query: () => ({
+                url: `/notification-status`,
+                method: "GET",
+            }),
+            invalidatesTags: ['notification'],
+        }),
     })
 })
 
 
-export const {useGetNotificationQuery} = dashboardNotificationApi;
+export const {useGetNotificationQuery,usePostReadNotificationMutation,useReadAllNotificationMutation,useTotalGetNotificationQuery} = dashboardNotificationApi;
