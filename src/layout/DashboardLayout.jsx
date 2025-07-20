@@ -260,6 +260,19 @@ const DashboardLayout = () => {
                         </>
                     </h1>
                 );
+            case "/notification":
+                return (
+                    <h1 className="text-[#333333] font-semibold text-[24px]">
+                        <>
+                            <h1 className="text-[#333333] font-semibold text-[30px]">
+                                Notifications
+                            </h1>
+                            <p className="font-normal text-lg -mt-3 mb-4">
+                                Get real-time alerts on account activity, user updates, and system changes.
+                            </p>
+                        </>
+                    </h1>
+                );
         }
     };
 
