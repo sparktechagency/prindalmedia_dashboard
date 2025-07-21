@@ -6,11 +6,11 @@ import toast from "react-hot-toast"
 
 const Notification = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(7);
+  const [perPage, setPerPage] = useState(6);
 
   const { data: getNotificationData, refetch, isLoading } = useGetNotificationQuery({ per_page: perPage, page: currentPage })
 
-  const allNotificationData = getNotificationData?.data
+  const allNotificationData = getNotificationData?.data?.data
   const totalPaginationData = getNotificationData?.data?.total
 
   const [postReadNotification] = usePostReadNotificationMutation()
