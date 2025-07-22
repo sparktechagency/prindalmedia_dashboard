@@ -94,7 +94,10 @@ const Report = () => {
             title: 'Name',
             dataIndex: 'name',
             render: (_, record) => (
-                <div className=''>
+                <div className='flex items-center gap-4'>
+                    <img
+                     src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${record?.reporter_info?.avatar}`}
+                        alt="" className='w-[50px] h-[50px] rounded-full' />
                     <p className='font-semibold'>{record?.reporter_info?.name}</p>
                 </div>
             ),
@@ -209,7 +212,7 @@ const Report = () => {
                                     {singleReportData?.reporter_info?.name}
                                 </h1>
                                 <div className="flex items-center">
-                                  {singleReportData?.reporter_info?.email}
+                                    {singleReportData?.reporter_info?.email}
                                 </div>
                             </div>
                         </div>

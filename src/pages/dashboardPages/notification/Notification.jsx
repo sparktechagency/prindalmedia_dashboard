@@ -78,7 +78,6 @@ const Notification = () => {
                           src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${item.avatar}`}
                           alt="" className="bg-red-300 w-[60px] h-[60px] rounded-full" />
                       </div>
-                      <p>{item?.id}</p>
                       <div>
                         <h3 className="text-xl">
                           <span className="font-bold">{item?.user_name} </span>
