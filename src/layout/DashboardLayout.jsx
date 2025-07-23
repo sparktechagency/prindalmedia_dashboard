@@ -185,7 +185,7 @@ const DashboardLayout = () => {
             case "/dashboard":
                 return (
                     <>
-                        <img src="/photo1.png" alt="" />
+                        {/* <img src="/photo1.png" alt="" /> */}
                         <h1 className="text-[#333333] font-OpenSans font-semibold text-[30px]">
                             Overview
                         </h1>
@@ -293,6 +293,8 @@ const DashboardLayout = () => {
         localStorage.removeItem("role");
         navigate("/login")
     }
+
+    const fullName = getProfileData?.name.concat(" ", getProfileData?.last_name || "")
 
 
     return (
@@ -407,7 +409,8 @@ const DashboardLayout = () => {
                             <button onClick={handleNavigate} className="gap-3 w-full flex justify-between items-center p-3 bg-[#FFE8E8] text-base font-popping rounded-md font-semibold  ">
                                 <div className="flex items-center gap-2">
                                     <img src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${getProfileData?.avatar}`} alt="" className="w-[30px] rounded-full object-cover" />
-                                    {getProfileData?.name}
+                                   <p>{fullName?.length > 20 ? fullName?.slice(0, 20) + "..." : fullName}</p>
+
                                 </div>
 
                                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">

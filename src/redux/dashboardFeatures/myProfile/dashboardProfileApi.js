@@ -16,14 +16,14 @@ const dashboardProfileApi = baseApi.injectEndpoints({
                 url: `/profile`,
                 method: "GET",
             }),
-            invalidatesTags: ['profile'],
+            providesTags: ['profile'],
         }),
         dashboardProfile: builder.query({
             query: () => ({
                 url: `/admin/get-admin-profile`,
                 method: "GET",
             }),
-            invalidatesTags: ['profile'],
+            providesTags: ['profile'],
         }),
      
     })

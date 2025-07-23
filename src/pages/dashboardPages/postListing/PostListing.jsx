@@ -120,15 +120,6 @@ const PostListing = () => {
       ),
     },
     {
-      title: 'ID',
-      dataIndex: 'id',
-      render: (_, record) => (
-        <div className=''>
-          <p className='font-semibold'>{record.post_id}</p>
-        </div>
-      ),
-    },
-    {
       title: 'Food Type',
       dataIndex: 'food_type',
     },

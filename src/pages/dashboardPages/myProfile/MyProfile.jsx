@@ -72,8 +72,9 @@ const MyProfile = () => {
             console.log(res)
             if (res.status === true) {
                 toast.success(res?.message)
-                setImageFileList([]);
-                form.resetFields()
+              await refetch()
+                // setImageFileList([]);
+                // form.resetFields()
 
             } else {
                 toast.error(res?.message)
@@ -102,12 +103,12 @@ const MyProfile = () => {
                         <Form.Item
                             className="md:col-span-2"
                             name="image"
-                            rules={[
-                                {
-                                    required: ImageFileList?.length === 0,
-                                    message: "Image required",
-                                },
-                            ]}
+                            // rules={[
+                            //     {
+                            //         required: ImageFileList?.length === 0,
+                            //         message: "Image required",
+                            //     },
+                            // ]}
                         >
                             <Upload
                                 beforeUpload={() => false}
@@ -133,7 +134,6 @@ const MyProfile = () => {
                 <div className="flex justify-between gap-3">
                     <Form.Item
                         name="name"
-                        rules={[{ required: true, message: "Please enter your First name" }]}
                         style={{ width: "50%" }}
                     >
                         <Input
@@ -150,7 +150,6 @@ const MyProfile = () => {
 
                     <Form.Item
                         name="last_name"
-                        rules={[{ required: true, message: "Please enter your Last name" }]}
                         style={{ width: "50%" }}
                     >
                         <Input
@@ -169,8 +168,6 @@ const MyProfile = () => {
                 <div>
                     <Form.Item
                         name="contact_number"
-                        rules={[{ required: true, message: "Please enter your contact number" }]}
-                    // style={{ width: "50%" }}
                     >
                         <Input
                             prefix={<svg width="16" height="22" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -188,8 +185,6 @@ const MyProfile = () => {
                 <div>
                     <Form.Item
                         name="location"
-                        rules={[{ required: true, message: "Please enter your Location" }]}
-                    // style={{ width: "50%" }}
                     >
                         <Input
                             prefix={<svg width="18" height="23" viewBox="0 0 18 23" fill="none" xmlns="http://www.w3.org/2000/svg">
