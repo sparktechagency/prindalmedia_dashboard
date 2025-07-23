@@ -91,13 +91,21 @@ const Report = () => {
     const columns = [
 
         {
-            title: 'Name',
-            dataIndex: 'name',
+            title: 'Image',
+            dataIndex: 'image',
             render: (_, record) => (
-                <div className='flex items-center gap-4'>
+                <div className=''>
                     <img
                      src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${record?.reporter_info?.avatar}`}
                         alt="" className='w-[50px] h-[50px] rounded-full' />
+                </div>
+            ),
+        },
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            render: (_, record) => (
+                <div className=''>
                     <p className='font-semibold'>{record?.reporter_info?.name}</p>
                 </div>
             ),

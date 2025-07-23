@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import DashboardLayout from "../layout/DashboardLayout"
 import CommonDashboard from "../pages/dashboardPages/commonDashboard/CommonDashboard";
 import ManageUsers from "../pages/dashboardPages/manageUsers/ManageUsers";
@@ -13,49 +13,73 @@ import Report from "../pages/dashboardPages/report/Report";
 import TramsAandCondition from "../pages/dashboardPages/tramsAandCondition/TramsAandCondition";
 import PrivacyPolicy from "../pages/dashboardPages/privacyPolicy/PrivacyPolicy";
 import Notification from "../pages/dashboardPages/notification/Notification";
+import PrivatRoutes from "./PrivatRoutes";
 
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <DashboardLayout />,
+        element: <Navigate to="/login" replace />, // Redirect to /login
+    },
+    {
+        path: "/",
+        element: <PrivatRoutes>
+            <DashboardLayout />
+        </PrivatRoutes>,
         errorElement: <ErrorPage />,
         children: [
             {
-                path: "/",
-                element: <CommonDashboard />
+                path: "/dashboard",
+                element: <PrivatRoutes>
+                    <CommonDashboard />
+                </PrivatRoutes>
             },
             {
                 path: "/manage-users",
-                element: <ManageUsers />
+                element: <PrivatRoutes>
+                    <ManageUsers />
+                </PrivatRoutes>
             },
             {
                 path: "/post-listing",
-                element: <PostListing />
+                element: <PrivatRoutes>
+                    <PostListing />
+                </PrivatRoutes>
             },
             {
                 path: "/report",
-                element: <Report />
+                element: <PrivatRoutes>
+                    <Report />
+                </PrivatRoutes>
             },
             {
                 path: "/profile",
-                element: <MyProfile />
+                element: <PrivatRoutes>
+                    <MyProfile />
+                </PrivatRoutes>
             },
             {
                 path: "/trams&condition",
-                element: <TramsAandCondition />
+                element: <PrivatRoutes>
+                    <TramsAandCondition />
+                </PrivatRoutes>
             },
             {
                 path: "/privacy-policy",
-                element: <PrivacyPolicy />
+                element: <PrivatRoutes>
+                    <PrivacyPolicy />
+                </PrivatRoutes>
             },
             {
                 path: "/notification",
-                element: <Notification />
+                element: <PrivatRoutes>
+                    <Notification />
+                </PrivatRoutes>
             },
 
         ]
     },
+
     {
         path: "/login",
         element: <DashboardLogin />

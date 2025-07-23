@@ -14,16 +14,16 @@ const DashboardLayout = () => {
     const location = useLocation();
 
 
-    const {data:getProfile,refetch} = useGetProfileQuery() 
+    const { data: getProfile, refetch } = useGetProfileQuery()
     const getProfileData = getProfile?.data
 
-    const {data:notificationCount} = useTotalGetNotificationQuery()
-  
+    const { data: notificationCount } = useTotalGetNotificationQuery()
+
 
 
     const sidebarMenuItems = [
         {
-            path: "/",
+            path: "/dashboard",
             title: "Dashboard",
             icon: (
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -182,7 +182,7 @@ const DashboardLayout = () => {
 
     const getTitle = () => {
         switch (location.pathname) {
-            case "/":
+            case "/dashboard":
                 return (
                     <>
                         <img src="/photo1.png" alt="" />
@@ -285,8 +285,13 @@ const DashboardLayout = () => {
     }
 
 
-    const handleNotification = () =>{
-    navigate('/notification')
+    const handleNotification = () => {
+        navigate('/notification')
+    }
+    const handleNavigate = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        navigate("/login")
     }
 
 
@@ -398,23 +403,23 @@ const DashboardLayout = () => {
 
 
                         <div className="pb-4 mx-2">
-                            <Link to="/login">
-                                <button className="gap-3 w-full flex justify-between items-center p-3 bg-[#FFE8E8] text-base font-popping rounded-md font-semibold  ">
-                                    <div className="flex items-center gap-2">
-                                        <img src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${getProfileData?.avatar}`} alt="" className="w-[30px] rounded-full object-cover" />
-                                        {getProfileData?.name}
-                                    </div>
 
-                                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <mask id="mask0_192_7728" maskUnits="userSpaceOnUse" x="0" y="0" width="22" height="22">
-                                            <rect width="22" height="22" fill="#D9D9D9" />
-                                        </mask>
-                                        <g mask="url(#mask0_192_7728)">
-                                            <path d="M4.58333 19.25C4.07917 19.25 3.64757 19.0705 3.28854 18.7115C2.92951 18.3524 2.75 17.9208 2.75 17.4167V4.58333C2.75 4.07917 2.92951 3.64757 3.28854 3.28854C3.64757 2.92951 4.07917 2.75 4.58333 2.75H11V4.58333H4.58333V17.4167H11V19.25H4.58333ZM14.6667 15.5833L13.4062 14.2542L15.7438 11.9167H8.25V10.0833H15.7438L13.4062 7.74583L14.6667 6.41667L19.25 11L14.6667 15.5833Z" fill="#E53E3E" />
-                                        </g>
-                                    </svg>
-                                </button>
-                            </Link>
+                            <button onClick={handleNavigate} className="gap-3 w-full flex justify-between items-center p-3 bg-[#FFE8E8] text-base font-popping rounded-md font-semibold  ">
+                                <div className="flex items-center gap-2">
+                                    <img src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${getProfileData?.avatar}`} alt="" className="w-[30px] rounded-full object-cover" />
+                                    {getProfileData?.name}
+                                </div>
+
+                                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <mask id="mask0_192_7728" maskUnits="userSpaceOnUse" x="0" y="0" width="22" height="22">
+                                        <rect width="22" height="22" fill="#D9D9D9" />
+                                    </mask>
+                                    <g mask="url(#mask0_192_7728)">
+                                        <path d="M4.58333 19.25C4.07917 19.25 3.64757 19.0705 3.28854 18.7115C2.92951 18.3524 2.75 17.9208 2.75 17.4167V4.58333C2.75 4.07917 2.92951 3.64757 3.28854 3.28854C3.64757 2.92951 4.07917 2.75 4.58333 2.75H11V4.58333H4.58333V17.4167H11V19.25H4.58333ZM14.6667 15.5833L13.4062 14.2542L15.7438 11.9167H8.25V10.0833H15.7438L13.4062 7.74583L14.6667 6.41667L19.25 11L14.6667 15.5833Z" fill="#E53E3E" />
+                                    </g>
+                                </svg>
+                            </button>
+
                         </div>
                     </div>
                 </Sider>
@@ -443,9 +448,9 @@ const DashboardLayout = () => {
                                 style={{ zIndex: 11 }}
                             >
                                 {/* avater */}
-                                <div 
-                                onClick={handleNotification}
-                                className="flex justify-center items-center gap-4 relative">
+                                <div
+                                    onClick={handleNotification}
+                                    className="flex justify-center items-center gap-4 relative">
                                     <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <rect width="38" height="38" rx="19" fill="#76F4D9" fillOpacity="0.1" />
                                         <mask id="mask0_183_1250" maskUnits="userSpaceOnUse" x="7" y="7" width="24" height="24">

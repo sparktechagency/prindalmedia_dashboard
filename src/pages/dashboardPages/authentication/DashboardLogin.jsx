@@ -30,7 +30,7 @@ const DashboardLogin = () => {
                 localStorage.setItem("token", token);
                 localStorage.setItem("role", role);
                 form.resetFields()
-                navigate('/')
+                navigate('/dashboard')
             }
             else if (res.status === false) {
                 toast.error(res?.message)
