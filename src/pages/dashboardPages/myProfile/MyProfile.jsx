@@ -19,7 +19,7 @@ const MyProfile = () => {
     const {data:getDashboardProfile, refetch, isLoading } = useDashboardProfileQuery()
     const dashboardProfileData = getDashboardProfile?.data
 
-    console.log(dashboardProfileData?.avatar);
+ 
     
 
 
@@ -82,7 +82,7 @@ const MyProfile = () => {
         } catch (error) {
             if (error) {
                 console.log(error)
-                toast.error(error?.data?.data?.message?.location)
+                toast.error(error?.data?.message)
             }
         }
 
