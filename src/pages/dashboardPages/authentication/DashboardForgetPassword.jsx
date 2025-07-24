@@ -52,7 +52,8 @@ const DashboardForgetPassword = () => {
                 <div className="  justify-center items-center  flex    ">
                     <div className="h-[60vh] bg-white w-[536px]  shadow-xl p-8 rounded-2xl">
                         <div className="text-center pb-16">
-                            <img src="/Savorly.svg" alt="Logo" className="mx-auto py-6 w-[70%] object-cover cursor-pointer" />
+                            {/* <img src="/Savorly.svg" alt="Logo" className="mx-auto py-6 w-[70%] object-cover cursor-pointer" /> */}
+                            <img src="/Kalamari.png" alt="Logo" className="mx-auto py-6 w-[70%] object-cover cursor-pointer" />
                             <h1 className="font-bold text-3xl font-OpenSans text-[40px] mb-6">
                                 Forget password
                             </h1>

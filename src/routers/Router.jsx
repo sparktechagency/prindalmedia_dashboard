@@ -20,6 +20,7 @@ const router = createBrowserRouter([
     {
         path: "/",
         element: <Navigate to="/login" replace />, // Redirect to /login
+         errorElement: <ErrorPage />,
     },
     {
         path: "/",

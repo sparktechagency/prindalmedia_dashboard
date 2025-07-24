@@ -296,7 +296,7 @@ const DashboardLayout = () => {
 
     const fullName = getProfileData?.name?.concat(" ", getProfileData?.last_name || "")
 
-console.log(fullName)
+
     return (
         <>
             <Layout style={{ fontFamily: "OpenSans" }}>
@@ -317,7 +317,8 @@ console.log(fullName)
                     <div className=" h-dvh flex flex-col justify-between">
                         <div>
                             <div className="">
-                                <img onClick={() => navigate('/')} src="/Savorly.svg" alt="Logo" className="mx-auto py-6 w-[70%] object-cover cursor-pointer" />
+                                {/* <img onClick={() => navigate('/')} src="/Savorly.svg" alt="Logo" className="mx-auto py-6 w-[70%] object-cover cursor-pointer" /> */}
+                                <img onClick={() => navigate('/')} src="/Kalamari.png" alt="Logo" className="mx-auto py-6 w-[80%] object-cover cursor-pointer" />
                             </div>
                             <Menu
                                 mode="inline"
