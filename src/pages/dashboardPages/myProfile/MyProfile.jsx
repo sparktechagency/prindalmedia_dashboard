@@ -44,7 +44,7 @@ const MyProfile = () => {
                 ]);
             }
         }
-    }, [dashboardProfileData]);
+    }, [dashboardProfileData,refetch]);
 
 
 
@@ -61,7 +61,7 @@ const MyProfile = () => {
         formData.append("name", values.name);
         formData.append("last_name", values.last_name);
         formData.append("contact_number", values.contact_number);
-        // formData.append("location", values.location);
+        formData.append("location", values.location);
 
         // formData.forEach((value, key) => {
         //     console.log(`${key}:`, value);
