@@ -11,6 +11,8 @@ const MyProfile = () => {
     const [form] = useForm()
     const [ImageFileList, setImageFileList] = useState([]);
 
+    console.log(ImageFileList);
+    
 
     const [updateProfile] = useUpdateProfileMutation()
     const { data: getProfile,  } = useGetProfileQuery()
