@@ -99,7 +99,7 @@ const ManageUsers = () => {
       render: (_, record) => (
         <div className=''>
           <img
-            src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${record.avatar}`}
+           src={record.avatar_url}
             alt="" className='w-[50px] h-[50px] rounded-full' />
         </div>
       ),

@@ -11,7 +11,7 @@ const MyProfile = () => {
     const [form] = useForm()
     const [ImageFileList, setImageFileList] = useState([]);
 
-    console.log(ImageFileList);
+
     
 
     const [updateProfile] = useUpdateProfileMutation()
@@ -35,13 +35,13 @@ const MyProfile = () => {
                 // image will be handled separately
             });
 
-            if (dashboardProfileData?.avatar) {
+            if (dashboardProfileData?.avatar_url) {
                 setImageFileList([
                     {
                         uid: '-1',
                         name: 'image.png',
                         status: 'done',
-                       url: `${import.meta.env.VITE_API_IMAGE_BASE_URL}${dashboardProfileData?.avatar}`,// show image preview
+                       url: `${dashboardProfileData?.avatar_url}`,// show image preview
                     },
                 ]);
             }
@@ -68,6 +68,8 @@ const MyProfile = () => {
         // formData.forEach((value, key) => {
         //     console.log(`${key}:`, value);
         // })
+
+
 
         try {
             const res = await updateProfile(formData).unwrap()
@@ -104,7 +106,7 @@ const MyProfile = () => {
 
                         <Form.Item
                             className="md:col-span-2"
-                            name="image"
+                            name="avatar_url"
                             // rules={[
                             //     {
                             //         required: ImageFileList?.length === 0,

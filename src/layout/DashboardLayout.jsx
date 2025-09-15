@@ -409,7 +409,7 @@ const DashboardLayout = () => {
 
                             <button onClick={handleNavigate} className="gap-3 w-full flex justify-between items-center p-3 bg-[#FFE8E8] text-base font-popping rounded-md font-semibold  ">
                                 <div className="flex items-center gap-2">
-                                    <img src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${getProfileData?.avatar}`} alt="" className="w-[30px] h-[30px] rounded-full object-cover" />
+                                    <img src={getProfileData?.avatar_url} alt="" className="w-[30px] h-[30px] rounded-full object-cover" />
                                     {
                                         fullName ? <p>{fullName?.length > 20 ? fullName?.slice(0, 20) + "..." : fullName}</p> : ''
                                     }

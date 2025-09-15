@@ -96,7 +96,7 @@ const Report = () => {
             render: (_, record) => (
                 <div className=''>
                     <img
-                     src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${record?.reporter_info?.avatar}`}
+                  src={record?.reporter_info?.avatar_url}
                         alt="" className='w-[50px] h-[50px] rounded-full' />
                 </div>
             ),
@@ -212,7 +212,7 @@ const Report = () => {
                         <div className="flex items-center  -mx-2">
                             <img
                                 className="object-cover mx-2 rounded-full w-14 shrink-0 h-14 "
-                                src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${singleReportData?.reporter_info?.avatar}`}
+                                src={singleReportData?.reporter_info?.avatar_url}
                                 alt="Robert"
                             />
                             <div className="mx-4">

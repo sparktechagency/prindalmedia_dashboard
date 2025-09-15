@@ -75,7 +75,7 @@ const Notification = () => {
                     <div className="flex items-center gap-3 ">
                       <div>
                         <img
-                          src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${item.avatar}`}
+                          src={item.avatar_url}
                           alt="" className="bg-red-300 w-[60px] h-[60px] rounded-full" />
                       </div>
                       <div>

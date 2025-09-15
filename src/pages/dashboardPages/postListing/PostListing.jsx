@@ -105,7 +105,7 @@ const PostListing = () => {
       render: (_, record) => (
         <div className=''>
           <img
-            src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${record.avatar}`}
+            src={record?.avatar_url}
             alt="" className='w-[50px] h-[50px] rounded-full' />
         </div>
       ),
@@ -213,7 +213,7 @@ const PostListing = () => {
             <div className="flex items-center  -mx-2">
               <img
                 className="object-cover mx-2 rounded-full w-14 shrink-0 h-14 "
-                src={`${import.meta.env.VITE_API_IMAGE_BASE_URL}${postDetailsData?.avatar}`}
+                src={postDetailsData?.avatar_url}
                 alt="Robert"
               />
 
