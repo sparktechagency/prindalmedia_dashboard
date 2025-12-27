@@ -19,7 +19,7 @@ const dashboardManageUsersApi = baseApi.injectEndpoints({
         }),
         statusChangeUser: builder.mutation({
             query: (id) => ({
-                url: `/admin/verified-unverified/2`,
+                url: `/admin/verified-unverified/${id}`,
                 method: "PATCH",
             }),
             invalidatesTags: ['user'],
