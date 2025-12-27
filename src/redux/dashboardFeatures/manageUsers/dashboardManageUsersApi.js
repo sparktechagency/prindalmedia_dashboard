@@ -16,9 +16,16 @@ const dashboardManageUsersApi = baseApi.injectEndpoints({
                 method: "DELETE",
             }),
             invalidatesTags: ['user'],
+        }),
+        statusChangeUser: builder.mutation({
+            query: (id) => ({
+                url: `/admin/verified-unverified/2`,
+                method: "PATCH",
+            }),
+            invalidatesTags: ['user'],
         })
     })
 })
 
 
-export const {useGetUsersQuery,useDeleteUserMutation} = dashboardManageUsersApi;
+export const {useGetUsersQuery,useDeleteUserMutation,useStatusChangeUserMutation} = dashboardManageUsersApi;
