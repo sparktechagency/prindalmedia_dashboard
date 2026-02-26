@@ -182,7 +182,6 @@ const PostListing = () => {
 
   return (
     <div>
-      <h1>UPDATE THIS SECTION</h1>
       <Space direction="vertical" style={{ marginBottom: "20px", background: "#00C49A", borderRadius: "20px" }}>
         <Search placeholder="Enter search name"
           value={searchText}
