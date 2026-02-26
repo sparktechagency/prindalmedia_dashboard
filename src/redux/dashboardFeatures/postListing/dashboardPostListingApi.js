@@ -8,12 +8,19 @@ const dashboardPostListingApi = baseApi.injectEndpoints({
                 url: `/admin/get-posts?per_page=${per_page}&search=${search}&page=${page}`,
                 method: "GET",
             }),
-            invalidatesTags: ['postList'],
+            providesTags: ['postList'],
         }),
         detailsPostListing: builder.query({
             query: (detailsId) => ({
                 url: `/admin/get-post?post_id=${detailsId}`,
                 method: "GET",
+            }),
+            providesTags: ['postList'],
+        }),
+        deletePostListing: builder.mutation({
+            query: (id) => ({
+                url: `/admin/delete-post?post_id=${id}`,
+                method: "DELETE",
             }),
             invalidatesTags: ['postList'],
         }),
@@ -21,4 +28,4 @@ const dashboardPostListingApi = baseApi.injectEndpoints({
 })
 
 
-export const {useGetPostListingQuery,useDetailsPostListingQuery} = dashboardPostListingApi;
+export const {useGetPostListingQuery,useDetailsPostListingQuery,useDeletePostListingMutation} = dashboardPostListingApi;

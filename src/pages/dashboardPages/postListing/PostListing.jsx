@@ -4,7 +4,7 @@ import { Input, Space, Table, Form, Radio, Pagination } from 'antd';
 import { AudioOutlined } from '@ant-design/icons';
 const { Search } = Input;
 import { Button, Modal } from 'antd';
-import { useDetailsPostListingQuery, useGetPostListingQuery } from '../../../redux/dashboardFeatures/postListing/dashboardPostListingApi';
+import { useDeletePostListingMutation, useDetailsPostListingQuery, useGetPostListingQuery } from '../../../redux/dashboardFeatures/postListing/dashboardPostListingApi';
 
 
 
@@ -24,6 +24,7 @@ import moment from 'moment';
 const PostListing = () => {
   const [formOne] = Form.useForm();
   const [modalOpenOne, setModalOpenOne] = useState(false)
+  const [deleteModalOpenOne, setDeleteModalOpenOne] = useState(false)
   const [searchText, setSearchText] = useState('')
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(7);
@@ -37,6 +38,8 @@ const PostListing = () => {
 
   const { data: postDetails } = useDetailsPostListingQuery(postId)
   const postDetailsData = postDetails?.data
+
+  const [deletePostListing] = useDeletePostListingMutation()
 
 
 
@@ -59,11 +62,32 @@ const PostListing = () => {
 
 
 
+  // delete modal
+
+  const showDeleteModalOne = (id) => {
+    setPostId(id)
+    setDeleteModalOpenOne(true)
+  }
+
+  const handleDeleteModalOpenOneOk = async () => {
+    try {
+      const res = await deletePostListing(postId).unwrap();
+      if (res?.status === true) {
+        setDeleteModalOpenOne(false)
+        toast.success(res?.message);
+         refetch()
+      }
+    } catch (error) {
+      if (error) {
+        toast.error(error?.data?.message);
+      }
+    }
+  }
 
 
-
-
-
+  const handleDeleteModalCancelOneOk = () => {
+    setDeleteModalOpenOne(false)
+  }
 
   const suffix = (
     <AudioOutlined
@@ -73,30 +97,6 @@ const PostListing = () => {
       }}
     />
   );
-
-  const handleDelete = () => {
-    console.log('click')
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Delete this user!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "Your file has been deleted.",
-          icon: "success"
-        });
-      }
-    });
-  }
-  const handleUpdate = () => {
-    console.log('click')
-  }
 
   const columns = [
     {
@@ -156,7 +156,14 @@ const PostListing = () => {
                 <path d="M12 16C13.25 16 14.3125 15.5625 15.1875 14.6875C16.0625 13.8125 16.5 12.75 16.5 11.5C16.5 10.25 16.0625 9.1875 15.1875 8.3125C14.3125 7.4375 13.25 7 12 7C10.75 7 9.6875 7.4375 8.8125 8.3125C7.9375 9.1875 7.5 10.25 7.5 11.5C7.5 12.75 7.9375 13.8125 8.8125 14.6875C9.6875 15.5625 10.75 16 12 16ZM12 14.2C11.25 14.2 10.6125 13.9375 10.0875 13.4125C9.5625 12.8875 9.3 12.25 9.3 11.5C9.3 10.75 9.5625 10.1125 10.0875 9.5875C10.6125 9.0625 11.25 8.8 12 8.8C12.75 8.8 13.3875 9.0625 13.9125 9.5875C14.4375 10.1125 14.7 10.75 14.7 11.5C14.7 12.25 14.4375 12.8875 13.9125 13.4125C13.3875 13.9375 12.75 14.2 12 14.2ZM12 19C9.56667 19 7.35 18.3208 5.35 16.9625C3.35 15.6042 1.9 13.7833 1 11.5C1.9 9.21667 3.35 7.39583 5.35 6.0375C7.35 4.67917 9.56667 4 12 4C14.4333 4 16.65 4.67917 18.65 6.0375C20.65 7.39583 22.1 9.21667 23 11.5C22.1 13.7833 20.65 15.6042 18.65 16.9625C16.65 18.3208 14.4333 19 12 19ZM12 17C13.8833 17 15.6125 16.5042 17.1875 15.5125C18.7625 14.5208 19.9667 13.1833 20.8 11.5C19.9667 9.81667 18.7625 8.47917 17.1875 7.4875C15.6125 6.49583 13.8833 6 12 6C10.1167 6 8.3875 6.49583 6.8125 7.4875C5.2375 8.47917 4.03333 9.81667 3.2 11.5C4.03333 13.1833 5.2375 14.5208 6.8125 15.5125C8.3875 16.5042 10.1167 17 12 17Z" fill="#49ADF4" />
               </g>
             </svg>
-
+          </button>
+          <button
+            onClick={() => showDeleteModalOne(record?.post_id)}
+            className=" p-1 rounded bg-blue"
+          >
+            <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14 1H10.5L9.5 0H4.5L3.5 1H0V3H14M1 16C1 16.5304 1.21071 17.0391 1.58579 17.4142C1.96086 17.7893 2.46957 18 3 18H11C11.5304 18 12.0391 17.7893 12.4142 17.4142C12.7893 17.0391 13 16.5304 13 16V4H1V16Z" fill="#FF5353" />
+            </svg>
 
           </button>
         </div>
@@ -165,7 +172,7 @@ const PostListing = () => {
   ];
 
 
-
+// console.log(postDetailsData?.photo, 'postDetailsData?.photo')
 
 
   useEffect(() => {
@@ -190,7 +197,6 @@ const PostListing = () => {
         pagination={false}
       />
 
-
       {/* modal one */}
       <Modal
         centered
@@ -205,7 +211,7 @@ const PostListing = () => {
         footer={null}
         width={600}
         className='custom-service-modal'
-       
+
       >
 
         <div className="p-8">
@@ -242,23 +248,10 @@ const PostListing = () => {
                     {postDetailsData?.restaurant_name}, {postDetailsData?.location}
                   </div>
                 }
-
-
-
-
-
-
-
-
-
-
-
-
-
               </div>
             </div>
 
-            {postDetailsData?.photo?.length > 1 ? (
+            {postDetailsData?.photo && postDetailsData?.photo?.length > 1 ? (
               <Swiper navigation={true} modules={[Navigation]} className="mySwiper">
                 {postDetailsData.photo.map((item, index) => (
                   <SwiperSlide key={index} className="pt-8 cursor-pointer">
@@ -304,24 +297,7 @@ const PostListing = () => {
                   </span>
                   <p>{postDetailsData?.commentCounts}</p>
                 </div>
-
-                {/* <div>
-                  <span>
-                    <svg width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M10.3333 13.6666C9.7777 13.6666 9.30547 13.4721 8.91659 13.0833C8.5277 12.6944 8.33325 12.2221 8.33325 11.6666C8.33325 11.5999 8.34992 11.4444 8.38325 11.1999L3.69992 8.46658C3.52214 8.63325 3.31659 8.76381 3.08325 8.85825C2.84992 8.9527 2.59992 8.99992 2.33325 8.99992C1.7777 8.99992 1.30547 8.80547 0.916585 8.41658C0.527696 8.0277 0.333252 7.55547 0.333252 6.99992C0.333252 6.44436 0.527696 5.97214 0.916585 5.58325C1.30547 5.19436 1.7777 4.99992 2.33325 4.99992C2.59992 4.99992 2.84992 5.04714 3.08325 5.14158C3.31659 5.23603 3.52214 5.36659 3.69992 5.53325L8.38325 2.79992C8.36103 2.72214 8.34714 2.64714 8.34159 2.57492C8.33603 2.5027 8.33325 2.42214 8.33325 2.33325C8.33325 1.7777 8.5277 1.30547 8.91659 0.916585C9.30547 0.527696 9.7777 0.333252 10.3333 0.333252C10.8888 0.333252 11.361 0.527696 11.7499 0.916585C12.1388 1.30547 12.3333 1.7777 12.3333 2.33325C12.3333 2.88881 12.1388 3.36103 11.7499 3.74992C11.361 4.13881 10.8888 4.33325 10.3333 4.33325C10.0666 4.33325 9.81659 4.28603 9.58325 4.19159C9.34992 4.09714 9.14436 3.96659 8.96659 3.79992L4.28325 6.53325C4.30547 6.61103 4.31936 6.68603 4.32492 6.75825C4.33047 6.83047 4.33325 6.91103 4.33325 6.99992C4.33325 7.08881 4.33047 7.16936 4.32492 7.24158C4.31936 7.31381 4.30547 7.38881 4.28325 7.46658L8.96659 10.1999C9.14436 10.0333 9.34992 9.9027 9.58325 9.80825C9.81659 9.71381 10.0666 9.66658 10.3333 9.66658C10.8888 9.66658 11.361 9.86103 11.7499 10.2499C12.1388 10.6388 12.3333 11.111 12.3333 11.6666C12.3333 12.2221 12.1388 12.6944 11.7499 13.0833C11.361 13.4721 10.8888 13.6666 10.3333 13.6666ZM10.3333 12.3333C10.5221 12.3333 10.6805 12.2694 10.8083 12.1416C10.936 12.0138 10.9999 11.8555 10.9999 11.6666C10.9999 11.4777 10.936 11.3194 10.8083 11.1916C10.6805 11.0638 10.5221 10.9999 10.3333 10.9999C10.1444 10.9999 9.98603 11.0638 9.85825 11.1916C9.73047 11.3194 9.66659 11.4777 9.66659 11.6666C9.66659 11.8555 9.73047 12.0138 9.85825 12.1416C9.98603 12.2694 10.1444 12.3333 10.3333 12.3333ZM2.33325 7.66658C2.52214 7.66658 2.68047 7.6027 2.80825 7.47492C2.93603 7.34714 2.99992 7.18881 2.99992 6.99992C2.99992 6.81103 2.93603 6.6527 2.80825 6.52492C2.68047 6.39714 2.52214 6.33325 2.33325 6.33325C2.14436 6.33325 1.98603 6.39714 1.85825 6.52492C1.73047 6.6527 1.66659 6.81103 1.66659 6.99992C1.66659 7.18881 1.73047 7.34714 1.85825 7.47492C1.98603 7.6027 2.14436 7.66658 2.33325 7.66658ZM10.3333 2.99992C10.5221 2.99992 10.6805 2.93603 10.8083 2.80825C10.936 2.68047 10.9999 2.52214 10.9999 2.33325C10.9999 2.14436 10.936 1.98603 10.8083 1.85825C10.6805 1.73047 10.5221 1.66659 10.3333 1.66659C10.1444 1.66659 9.98603 1.73047 9.85825 1.85825C9.73047 1.98603 9.66659 2.14436 9.66659 2.33325C9.66659 2.52214 9.73047 2.68047 9.85825 2.80825C9.98603 2.93603 10.1444 2.99992 10.3333 2.99992Z" fill="#454545" />
-                    </svg>
-
-                  </span>
-                </div> */}
               </div>
-
-
-              {/* bookmark icon */}
-              {/* <div>
-                <svg width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M0.333252 12V1.33333C0.333252 0.966667 0.463808 0.652778 0.724919 0.391667C0.98603 0.130556 1.29992 0 1.66659 0H8.33325C8.69992 0 9.01381 0.130556 9.27492 0.391667C9.53603 0.652778 9.66658 0.966667 9.66658 1.33333V12L4.99992 10L0.333252 12ZM1.66659 9.96667L4.99992 8.53333L8.33325 9.96667V1.33333H1.66659V9.96667Z" fill="#454545" />
-                </svg>
-              </div> */}
             </div>
 
 
@@ -339,13 +315,13 @@ const PostListing = () => {
               <div className='flex flex-col items-center '>
                 {
                   postDetailsData?.rating && <span className='flex items-center gap-2'>
-                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5.03638 3.56659L7.25304 0.696794C7.41138 0.485683 7.5994 0.330648 7.81711 0.231689C8.03481 0.132731 8.26242 0.083252 8.49992 0.083252C8.73742 0.083252 8.96502 0.132731 9.18273 0.231689C9.40044 0.330648 9.58846 0.485683 9.74679 0.696794L11.9635 3.56659L15.328 4.69471C15.6711 4.80027 15.9416 4.99488 16.1395 5.27856C16.3374 5.56225 16.4364 5.87561 16.4364 6.21867C16.4364 6.377 16.4133 6.53534 16.3671 6.69367C16.3209 6.852 16.2451 7.00374 16.1395 7.14888L13.9624 10.2364L14.0416 13.4822C14.0548 13.944 13.903 14.3333 13.5864 14.6499C13.2697 14.9666 12.9003 15.1249 12.478 15.1249C12.4517 15.1249 12.3065 15.1051 12.0426 15.0655L8.49992 14.076L4.95721 15.0655C4.89124 15.0919 4.81867 15.1084 4.7395 15.115C4.66034 15.1216 4.58777 15.1249 4.52179 15.1249C4.09957 15.1249 3.73013 14.9666 3.41346 14.6499C3.09679 14.3333 2.94506 13.944 2.95825 13.4822L3.03742 10.2166L0.880127 7.14888C0.774571 7.00374 0.698703 6.852 0.652523 6.69367C0.606342 6.53534 0.583252 6.377 0.583252 6.21867C0.583252 5.88881 0.678912 5.58204 0.870231 5.29836C1.06155 5.01468 1.32874 4.81346 1.67179 4.69471L5.03638 3.56659Z" fill="#FFC107" />
-                  </svg>
-                   <p className='text-xl font-semibold'>{postDetailsData?.rating}</p>
-                </span>
+                    <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5.03638 3.56659L7.25304 0.696794C7.41138 0.485683 7.5994 0.330648 7.81711 0.231689C8.03481 0.132731 8.26242 0.083252 8.49992 0.083252C8.73742 0.083252 8.96502 0.132731 9.18273 0.231689C9.40044 0.330648 9.58846 0.485683 9.74679 0.696794L11.9635 3.56659L15.328 4.69471C15.6711 4.80027 15.9416 4.99488 16.1395 5.27856C16.3374 5.56225 16.4364 5.87561 16.4364 6.21867C16.4364 6.377 16.4133 6.53534 16.3671 6.69367C16.3209 6.852 16.2451 7.00374 16.1395 7.14888L13.9624 10.2364L14.0416 13.4822C14.0548 13.944 13.903 14.3333 13.5864 14.6499C13.2697 14.9666 12.9003 15.1249 12.478 15.1249C12.4517 15.1249 12.3065 15.1051 12.0426 15.0655L8.49992 14.076L4.95721 15.0655C4.89124 15.0919 4.81867 15.1084 4.7395 15.115C4.66034 15.1216 4.58777 15.1249 4.52179 15.1249C4.09957 15.1249 3.73013 14.9666 3.41346 14.6499C3.09679 14.3333 2.94506 13.944 2.95825 13.4822L3.03742 10.2166L0.880127 7.14888C0.774571 7.00374 0.698703 6.852 0.652523 6.69367C0.606342 6.53534 0.583252 6.377 0.583252 6.21867C0.583252 5.88881 0.678912 5.58204 0.870231 5.29836C1.06155 5.01468 1.32874 4.81346 1.67179 4.69471L5.03638 3.56659Z" fill="#FFC107" />
+                    </svg>
+                    <p className='text-xl font-semibold'>{postDetailsData?.rating}</p>
+                  </span>
                 }
-                
+
                 <div>
                   <p className='text-xs font-semibold'>
                     {moment(postDetailsData?.created_at).format('l')}
@@ -363,6 +339,46 @@ const PostListing = () => {
               <p className='text-[14px] text-[#454545]'>{postDetailsData?.description}</p>
             </div>
           </Form>
+        </div>
+      </Modal >
+
+
+      {/* delete modal*/}
+      <Modal
+        centered
+        title={
+          <div className="text-center bg-primary text-[#ffffff] py-4 font-OpenSans text-[18px]  font-semibold rounded-t-lg">
+            Delete This Post Listing
+          </div>
+        }
+        open={deleteModalOpenOne}
+        onOk={handleDeleteModalOpenOneOk}
+        onCancel={handleDeleteModalCancelOneOk}
+        footer={null}
+        width={600}
+        className='custom-service-modal'
+
+      >
+
+        <div className="p-8">
+          <div className='flex justify-center'>
+            <span>
+              <svg
+                className='w-96 h-16'
+                width="14" height="40" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 1H10.5L9.5 0H4.5L3.5 1H0V3H14M1 16C1 16.5304 1.21071 17.0391 1.58579 17.4142C1.96086 17.7893 2.46957 18 3 18H11C11.5304 18 12.0391 17.7893 12.4142 17.4142C12.7893 17.0391 13 16.5304 13 16V4H1V16Z" fill="#FF5353" />
+              </svg>
+            </span>
+          </div>
+
+          <div className='flex flex-col justify-center items-center py-4'>
+            <h2 className='text-3xl font-semibold text-red-500'>Delete Post ?</h2>
+            <h2 className='text-center text-[#535353]'>Are you sure you want to delete this post listing?</h2>
+          </div>
+          <div className='flex items-center justify-end gap-5 mt-16'>
+            <button className='w-full px-4 py-3 bg-gray-200 rounded-md' onClick={handleDeleteModalCancelOneOk}>Cancel</button>
+            <button className='w-full px-4 py-3 bg-red-500 text-white rounded-md' onClick={handleDeleteModalOpenOneOk}>Delete</button>
+          </div>
         </div>
       </Modal >
 
